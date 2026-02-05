@@ -106,9 +106,18 @@
 
         // --- 景點深度介紹資料庫 ---
         const ATTRACTION_DETAILS = {
+            "飛驒古川 瀨戶川鯉魚": "飛驒古川（Hida Furukawa）是一個比高山更寧靜、更具生活感的古老小鎮，因動畫電影《你的名字》在此取景而聲名大噪。\n\n【必看亮點】\n1. 白壁土藏街與瀨戶川：這是古川最經典的畫面。沿著清澈的瀨戶川，排列著一整排白牆黑瓦的傳統倉庫（土藏）。川裡游著上千條色彩斑斕的錦鯉，您可以購買魚飼料餵食，感受悠閒的午後時光。\n\n2. 《你的名字》聖地巡禮：\n- 飛驒古川車站：電影中瀧尋找三葉時出現的車站場景，一定要在天橋上拍一張列車進站的畫面。\n- 飛驒市圖書館：瀧在此查閱關於糸守町的資料。\n- 氣多若宮神社：電影中宮水神社的原型之一。\n\n這裡沒有高山老街的擁擠喧囂，多了一份屬於飛驒山城的靜謐與優雅。",
+
+            "新穗高雙層纜車": "新穗高高空纜車（Shinhotaka Ropeway）是日本唯一的雙層纜車，帶您直達標高2156公尺的雲端世界，輕鬆飽覽北阿爾卑斯山的壯麗全景。\n\n【空中漫步體驗】\n纜車分為兩段，第一段從新穗高溫泉站到鍋平高原站，第二段則是著名的雙層纜車，直達西穗高口站。隨著纜車緩緩爬升，原本仰望的群山逐漸變為平視，最後將整個槍之岳、穗高連峰踩在腳下。\n\n【山頂展望台】\n西穗高口站頂樓的展望台榮獲《米其林綠色指南》二星評價。在這裡，您可以360度無死角地欣賞綿延的雪峰與雲海。如果在冬季或春初前往，還能體驗在比人還高的「雪之迴廊」中散步的樂趣。",
+
+            "雨晴海岸": "雨晴海岸（Amaharashi Coast）被選為「日本海濱百選」之一，位於富山縣高岡市。這裡擁有世界上極為罕見的奇景——「隔著海洋眺望3000公尺級的高山」。\n\n【絕景構圖】\n天氣晴朗時，您可以站在海邊，看著湛藍的富山灣，而海平面的對岸竟然矗立著終年積雪的立山連峰！前景著名的「女岩」與後方雄偉的雪山相互輝映，彷彿一幅潑墨山水畫。\n\n【義經岩傳說】\n海岸邊有一塊巨大的岩石叫做「義經岩」。傳說源義經在被哥哥源賴朝追殺逃亡至北陸時，曾在此岩石下躲避驟雨等待天晴，這也是「雨晴」地名的由來。",
+
             "春之高山祭 (山王祭)": "春之高山祭（Spring Takayama Festival），又稱為山王祭，是日本三大美祭之一，每年固定於4月14日與15日舉行，宣告飛驒高山春天的來臨。\n\n【祭典看點】\n1. 華麗屋台：祭典的主角是12座被譽為「活動的陽明門」的屋台（花車）。這些屋台裝飾著精緻的飛驒木雕、漆器與金屬飾品，展現了江戶時代工匠的高超技藝。\n\n2. 機關人偶表演：其中幾座屋台上有精巧的「機關人偶（Karakuri）」，由多位操偶師在內部精密操控，人偶能做出變臉、寫字等高難度動作，栩栩如生，是必看重點！\n\n3. 夢幻夜祭：若天氣允許，14日晚上會舉行夜祭。每座屋台掛上約100盞燈籠，在漆黑的古老街道中巡遊，與白天華麗燦爛的氛圍截然不同，充滿了夢幻與神祕感。",
+            
             "立山黑部雪之大谷": "立山黑部阿爾卑斯路線，是一條連接富山縣與長野縣的壯闊山岳觀光路線。為了保護自然環境，私家車禁止進入，旅客必須換乘多種獨特的交通工具才能橫越群山。這趟旅程您將體驗人類工程與大自然奇景的結合。\n\n【六種交通工具大解密】\n1. 立山登山纜車 (7分鐘)：從立山站一口氣爬升500公尺，進入山岳地帶。\n\n2. 立山高原巴士 (50分鐘)：行駛在雪壁之間，前往標高2450公尺的室堂，也就是著名的「雪之大谷」所在地。\n\n3. 立山隧道無軌電車 (10分鐘)：這是在日本海拔最高的隧道中行駛的電車，全程都在山洞裡。\n\n4. 立山架空索道 (7分鐘)：無支柱式纜車，像移動的展望台，可以360度俯瞰阿爾卑斯山脈全景。\n\n5. 黑部登山纜車 (5分鐘)：為了不破壞景觀，这是日本唯一全地下式的纜車。\n\n6. 關電隧道電氣巴士 (16分鐘)：穿越當年工程最艱鉅的破碎帶，最後抵達扇澤。",
+            
             "名花之里 (Nabana no Sato)": "名花之里（Nabana no Sato）位於三重縣桑名市，以「日本最大規模的夜間燈飾」聞名於世。這裡的點燈活動不只是單純的掛掛燈泡，而是利用數百萬顆LED燈球，在大地上描繪出壯觀的圖畫。\n\n【必看亮點】\n1. 光之隧道：全長200公尺的光之迴廊，走在隧道中彷彿被溫暖的光芒包圍，是這裡最經典的打卡點。\n\n2. 主題燈飾區：每年會有不同的主題（如熊本熊、阿爾卑斯山的少女等），利用燈光在廣大的斜坡上演出動態的故事。\n\n3. 水上燈飾：利用寬廣的水面反射光影，創造出如同極光般夢幻的色彩變化。\n\n建議您傍晚入場，先欣賞白天的花園美景（如鬱金香），隨著夜幕低垂，見證燈光瞬間亮起的感動時刻。",
+            
             "吉卜力公園 Ghibli Park": "吉卜力公園位於愛知縣，是將原本的「愛・地球博紀念公園」重新規劃，讓宮崎駿筆下的奇幻世界真實重現。這裡與一般主題樂園最大的不同是——沒有大型雲霄飛車，沒有人偶裝表演，主打「散步、發現、感受」。\n\n【主要區域】\n1. 吉卜力大倉庫：這是室內型的大展覽館，收藏了吉卜力作品的秘密。您可以在這裡與《神隱少女》的無臉男合照，或是看到《天空之城》巨大的機器人兵。\n\n2. 青春之丘：重現了《心之谷》中的古董店「地球屋」，站在高處可以俯瞰園區。\n\n3. Dondoko之森：以《龍貓》為主題，穿過森林步道後，會看到小月和小梅的家。\n\n這裡的每個角落都藏著細節，請放慢腳步，在森林與微風中尋找屬於您的童話回憶吧！"
         };
 
@@ -577,7 +586,7 @@
                                 <div class="space-y-2">
                                     ${TOOLS_DATA.daily.map(item => `
                                         <button onclick="toggleCheck('${item.id}')" class="w-full flex items-center gap-3 text-left p-2 rounded-lg border ${checklist[item.id] ? 'bg-stone-100 border-stone-300' : 'bg-white border-stone-200'}">
-                                            <div class="w-5 h-5 rounded border flex items-center justify-center ${checklist[item.id] ? 'bg-stone-800 border-stone-800 text-white' : 'bg-white border-stone-300'}">
+                                            <div class="w-5 h-5 rounded border flex items-center justify-center ${checklist[item.id] ? 'bg-stone-800 border-stone-800 text-white' : 'bg-stone-300'}">
                                                 ${checklist[item.id] ? '<span class="text-xs">✓</span>' : ''}
                                             </div>
                                             <span class="text-sm ${checklist[item.id] ? 'text-stone-400 line-through' : 'text-stone-700'}">${item.label}</span>
@@ -645,11 +654,17 @@
                             <button onclick="clearBatch()" class="text-xs text-red-400 underline">清空</button>
                         </div>
                         <div class="bg-pink-50 p-4 rounded-xl border border-pink-100">
-                            <div class="flex gap-2 mb-2">
-                                <input id="batch-name" placeholder="品名" class="flex-1 p-2 rounded text-xs outline-none min-w-0">
-                                <input id="batch-price" type="number" placeholder="¥單價" class="w-20 p-2 rounded text-xs outline-none">
-                                <button onclick="addBatchItem()" class="bg-pink-500 text-white px-3 rounded text-xs flex-shrink-0"><i data-lucide="plus" class="w-3 h-3"></i></button>
+                            <!-- Store Name (Full Width) -->
+                            <div class="mb-2">
+                                <input id="batch-name" placeholder="品名" class="w-full p-2 rounded text-xs outline-none">
                             </div>
+                            <!-- Price & Qty Row -->
+                            <div class="flex gap-2 mb-2">
+                                <input id="batch-price" type="number" placeholder="¥單價" class="w-24 p-2 rounded text-xs outline-none">
+                                <input id="batch-qty" type="number" placeholder="數量" value="1" class="w-16 p-2 rounded text-xs outline-none text-center">
+                                <button onclick="addBatchItem()" class="bg-pink-500 text-white px-4 rounded text-xs flex-1 flex items-center justify-center font-bold"><i data-lucide="plus" class="w-3 h-3 mr-1"></i> 加入</button>
+                            </div>
+
                             <div id="batch-list" class="bg-white/50 rounded-lg p-2 mb-3 max-h-32 overflow-y-auto hidden"></div>
                             
                             <div class="pt-2 border-t border-pink-200">
@@ -661,6 +676,10 @@
                                     <div id="batch-progress" class="h-full bg-pink-500 transition-all duration-500" style="width: 0%"></div>
                                 </div>
                                 <p id="batch-status" class="text-center text-xs font-bold text-pink-600 mb-3">還差 ¥5,500</p>
+                                
+                                <button onclick="saveBatch()" class="w-full bg-stone-800 text-white text-xs py-2 rounded-lg flex items-center justify-center gap-1 hover:bg-stone-700 active:scale-95 transition-all">
+                                    <i data-lucide="save" class="w-3 h-3"></i> 結算並存入記帳
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -676,11 +695,19 @@
                             <p id="total-jpy" class="text-3xl font-black text-stone-800">¥0</p>
                             <p id="total-twd" class="text-xs text-stone-500 mt-1">約台幣 NT$ 0</p>
                         </div>
-                        <div class="flex gap-2 mb-4">
-                            <input id="budget-name" placeholder="品項" class="flex-1 p-2 bg-stone-100 rounded-lg text-xs outline-none min-w-0">
-                            <input id="budget-price" type="number" placeholder="¥" class="w-20 p-2 bg-stone-100 rounded-lg text-xs outline-none">
-                            <button onclick="addBudgetItem()" class="bg-stone-800 text-white px-3 rounded-lg flex-shrink-0"><i data-lucide="plus" class="w-4 h-4"></i></button>
+                        
+                        <!-- Input Area -->
+                        <div class="bg-stone-100 p-2 rounded-xl mb-4">
+                            <div class="mb-2">
+                                <input id="budget-name" placeholder="品項名稱" class="w-full p-2 bg-white rounded-lg text-xs outline-none">
+                            </div>
+                            <div class="flex gap-2">
+                                <input id="budget-price" type="number" placeholder="¥單價" class="w-24 p-2 bg-white rounded-lg text-xs outline-none">
+                                <input id="budget-qty" type="number" placeholder="數量" value="1" class="w-16 p-2 bg-white rounded-lg text-xs outline-none text-center">
+                                <button onclick="addBudgetItem()" class="bg-stone-800 text-white px-3 rounded-lg flex-1 flex items-center justify-center"><i data-lucide="plus" class="w-4 h-4 mr-1"></i> 記帳</button>
+                            </div>
                         </div>
+
                         <ul id="budget-list" class="space-y-2 max-h-60 overflow-y-auto"></ul>
                     </div>
                 </div>
@@ -774,24 +801,37 @@
             document.getElementById('twd-output').innerText = val ? Math.round(val * exchangeRate).toLocaleString() : 0;
         }
 
+        // --- 修正後的免稅湊單邏輯 ---
         function addBatchItem() {
             const name = document.getElementById('batch-name').value;
             const price = parseInt(document.getElementById('batch-price').value);
+            const qty = parseInt(document.getElementById('batch-qty').value) || 1; // 獲取數量，預設為 1
+
             if(name && price) {
-                batchItems.push({name, price});
+                batchItems.push({name, price, qty});
                 document.getElementById('batch-name').value = '';
                 document.getElementById('batch-price').value = '';
+                document.getElementById('batch-qty').value = '1'; // 重置數量為 1
                 renderBatch();
             }
         }
 
         function renderBatch() {
             const list = document.getElementById('batch-list');
-            const total = batchItems.reduce((acc, i) => acc + i.price, 0);
+            const total = batchItems.reduce((acc, i) => acc + (i.price * i.qty), 0); // 修正總額計算
             const remaining = 5500 - total;
             
             list.classList.remove('hidden');
-            list.innerHTML = batchItems.map(i => `<div class="flex justify-between text-xs text-stone-600 mb-1"><span>${i.name}</span><span>¥${i.price}</span></div>`).join('');
+            // 新增刪除按鈕
+            list.innerHTML = batchItems.map((i, idx) => `
+                <div class="flex justify-between items-center text-xs text-stone-600 mb-2 border-b border-pink-100 pb-1">
+                    <span>${i.name} <span class="text-stone-400">x${i.qty}</span></span>
+                    <div class="flex items-center gap-2">
+                        <span>¥${(i.price * i.qty).toLocaleString()}</span>
+                        <button onclick="deleteBatchItem(${idx})" class="text-stone-400 hover:text-red-500"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
+                    </div>
+                </div>
+            `).join('');
             
             document.getElementById('batch-total').innerText = '¥' + total.toLocaleString();
             const pct = Math.min((total / 5500) * 100, 100);
@@ -807,18 +847,46 @@
                 status.innerText = `還差 ¥${remaining.toLocaleString()}`;
                 status.className = "text-center text-xs font-bold text-pink-600 mb-3";
             }
+            lucide.createIcons(); // Refresh delete icons
+        }
+
+        function deleteBatchItem(idx) {
+            batchItems.splice(idx, 1);
+            renderBatch();
+        }
+
+        function saveBatch() {
+            if(batchItems.length === 0) return;
+            if(confirm(`將這 ${batchItems.length} 筆資料存入購物紀錄？`)) {
+                const store = "免稅湊單"; // 簡化
+                const newItems = batchItems.map(i => ({ name: `[${store}] ${i.name}`, price: i.price, qty: i.qty }));
+                budgetItems = [...budgetItems, ...newItems]; // Add to main budget
+                localStorage.setItem('trip_budget', JSON.stringify(budgetItems)); // Save immediately
+                
+                batchItems = []; 
+                renderBatch(); 
+                document.getElementById('batch-list').classList.add('hidden');
+                
+                // Switch to budget view or just notify? Let's just notify and re-render budget list if visible
+                renderBudgetList(); 
+                alert('已成功存入購物記帳！');
+            }
         }
 
         function clearBatch() { batchItems = []; renderBatch(); document.getElementById('batch-list').classList.add('hidden'); }
 
+        // --- 修正後的購物記帳邏輯 ---
         function addBudgetItem() {
             const name = document.getElementById('budget-name').value;
             const price = parseInt(document.getElementById('budget-price').value);
+            const qty = parseInt(document.getElementById('budget-qty').value) || 1;
+
             if(name && price) {
-                budgetItems.push({name, price});
+                budgetItems.push({name, price, qty});
                 localStorage.setItem('trip_budget', JSON.stringify(budgetItems));
                 document.getElementById('budget-name').value = '';
                 document.getElementById('budget-price').value = '';
+                document.getElementById('budget-qty').value = '1';
                 renderBudgetList();
             }
         }
@@ -834,16 +902,16 @@
         function renderBudgetList() {
             const list = document.getElementById('budget-list');
             if(!list) return;
-            const total = budgetItems.reduce((acc, i) => acc + i.price, 0);
+            const total = budgetItems.reduce((acc, i) => acc + (i.price * i.qty), 0);
             
             document.getElementById('total-jpy').innerText = '¥' + total.toLocaleString();
             document.getElementById('total-twd').innerText = '約台幣 NT$ ' + Math.round(total * exchangeRate).toLocaleString();
 
             list.innerHTML = budgetItems.map((item, i) => `
                 <li class="flex justify-between items-center border-b border-stone-100 pb-2 text-sm">
-                    <span class="text-stone-600">${item.name}</span>
+                    <span class="text-stone-600">${item.name} <span class="text-xs text-stone-400">x${item.qty}</span></span>
                     <div class="flex items-center gap-3">
-                        <span class="font-bold">¥${item.price.toLocaleString()}</span>
+                        <span class="font-bold">¥${(item.price * item.qty).toLocaleString()}</span>
                         <button onclick="deleteBudgetItem(${i})" class="text-stone-300 hover:text-red-400"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                     </div>
                 </li>

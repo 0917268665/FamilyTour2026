@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>昇龍道自駕助手 (靜態版)</title>
+    <title>昇龍道自駕助手 (AI版)</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
@@ -18,6 +18,7 @@
         /* Animations */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .animate-in { animation: fadeIn 0.3s ease-out forwards; }
+        .weather-stat-box { background-color: rgba(255,255,255,0.6); padding: 4px 8px; border-radius: 8px; font-size: 0.75rem; display: flex; align-items: center; gap: 4px; }
     </style>
 </head>
 <body class="pb-24">
@@ -29,8 +30,17 @@
                 <h1 class="text-xl font-bold tracking-tight text-stone-900">昇龍道自駕助手 🚙</h1>
                 <p class="text-xs text-stone-500 mt-1 font-medium italic">Travel Guide & Tools</p>
             </div>
-            <div class="bg-stone-100 p-2 rounded-full">
-                <i data-lucide="map" class="w-6 h-6 text-stone-600"></i>
+            
+            <div class="flex items-center gap-3">
+                <!-- Local Weather Display -->
+                <div id="local-weather" class="text-right cursor-pointer" onclick="fetchLocalWeather()">
+                    <div class="text-xs text-stone-400 flex items-center justify-end gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i> 所在地</div>
+                    <div class="font-bold text-stone-800 text-lg leading-none mt-0.5" id="local-temp">點擊定位</div>
+                </div>
+
+                <button onclick="window.open('https://www.google.com/maps/search/?api=1&query=日本中部', '_blank')" class="bg-stone-100 p-2 rounded-full active:scale-95 transition-transform shadow-sm">
+                    <i data-lucide="map" class="w-6 h-6 text-stone-600"></i>
+                </button>
             </div>
         </div>
         
@@ -90,29 +100,27 @@
         let activeDay = 0;
         let checklist = JSON.parse(localStorage.getItem('trip_checks') || '{}');
         let budgetItems = JSON.parse(localStorage.getItem('trip_budget') || '[]');
-        let batchItems = []; // 暫存湊單項目
-        let exchangeRate = 0.22; // 預設匯率
-        let currentModalText = ""; // 用於朗讀的文字
+        let batchItems = []; 
+        let exchangeRate = 0.22;
+        let currentModalText = ""; 
 
         // --- 景點深度介紹資料庫 ---
         const ATTRACTION_DETAILS = {
             "春之高山祭 (山王祭)": "春之高山祭（Spring Takayama Festival），又稱為山王祭，是日本三大美祭之一，每年固定於4月14日與15日舉行，宣告飛驒高山春天的來臨。\n\n【祭典看點】\n1. 華麗屋台：祭典的主角是12座被譽為「活動的陽明門」的屋台（花車）。這些屋台裝飾著精緻的飛驒木雕、漆器與金屬飾品，展現了江戶時代工匠的高超技藝。\n\n2. 機關人偶表演：其中幾座屋台上有精巧的「機關人偶（Karakuri）」，由多位操偶師在內部精密操控，人偶能做出變臉、寫字等高難度動作，栩栩如生，是必看重點！\n\n3. 夢幻夜祭：若天氣允許，14日晚上會舉行夜祭。每座屋台掛上約100盞燈籠，在漆黑的古老街道中巡遊，與白天華麗燦爛的氛圍截然不同，充滿了夢幻與神祕感。",
-            
             "立山黑部雪之大谷": "立山黑部阿爾卑斯路線，是一條連接富山縣與長野縣的壯闊山岳觀光路線。為了保護自然環境，私家車禁止進入，旅客必須換乘多種獨特的交通工具才能橫越群山。這趟旅程您將體驗人類工程與大自然奇景的結合。\n\n【六種交通工具大解密】\n1. 立山登山纜車 (7分鐘)：從立山站一口氣爬升500公尺，進入山岳地帶。\n\n2. 立山高原巴士 (50分鐘)：行駛在雪壁之間，前往標高2450公尺的室堂，也就是著名的「雪之大谷」所在地。\n\n3. 立山隧道無軌電車 (10分鐘)：這是在日本海拔最高的隧道中行駛的電車，全程都在山洞裡。\n\n4. 立山架空索道 (7分鐘)：無支柱式纜車，像移動的展望台，可以360度俯瞰阿爾卑斯山脈全景。\n\n5. 黑部登山纜車 (5分鐘)：為了不破壞景觀，这是日本唯一全地下式的纜車。\n\n6. 關電隧道電氣巴士 (16分鐘)：穿越當年工程最艱鉅的破碎帶，最後抵達扇澤。",
-            
             "名花之里 (Nabana no Sato)": "名花之里（Nabana no Sato）位於三重縣桑名市，以「日本最大規模的夜間燈飾」聞名於世。這裡的點燈活動不只是單純的掛掛燈泡，而是利用數百萬顆LED燈球，在大地上描繪出壯觀的圖畫。\n\n【必看亮點】\n1. 光之隧道：全長200公尺的光之迴廊，走在隧道中彷彿被溫暖的光芒包圍，是這裡最經典的打卡點。\n\n2. 主題燈飾區：每年會有不同的主題（如熊本熊、阿爾卑斯山的少女等），利用燈光在廣大的斜坡上演出動態的故事。\n\n3. 水上燈飾：利用寬廣的水面反射光影，創造出如同極光般夢幻的色彩變化。\n\n建議您傍晚入場，先欣賞白天的花園美景（如鬱金香），隨著夜幕低垂，見證燈光瞬間亮起的感動時刻。",
-            
             "吉卜力公園 Ghibli Park": "吉卜力公園位於愛知縣，是將原本的「愛・地球博紀念公園」重新規劃，讓宮崎駿筆下的奇幻世界真實重現。這裡與一般主題樂園最大的不同是——沒有大型雲霄飛車，沒有人偶裝表演，主打「散步、發現、感受」。\n\n【主要區域】\n1. 吉卜力大倉庫：這是室內型的大展覽館，收藏了吉卜力作品的秘密。您可以在這裡與《神隱少女》的無臉男合照，或是看到《天空之城》巨大的機器人兵。\n\n2. 青春之丘：重現了《心之谷》中的古董店「地球屋」，站在高處可以俯瞰園區。\n\n3. Dondoko之森：以《龍貓》為主題，穿過森林步道後，會看到小月和小梅的家。\n\n這裡的每個角落都藏著細節，請放慢腳步，在森林與微風中尋找屬於您的童話回憶吧！"
         };
 
-        // --- 資料數據 ---
+        // --- 資料數據 (更新美食與連結) ---
         const itineraryData = [
             { 
                 day: "Day 1", 
                 date: "4/11 (六)", 
                 location: "名古屋 Nagoya", 
-                weather: "12°C - 18°C 🌤️", 
+                lat: 35.18, lon: 136.90,
                 events: [ 
+                    { type: 'transport', title: '航班：CI 0154', detail: '07:30 台北(TPE) ➔ 11:20 名古屋(NGO)', booking: '訂位代號: FK3SJX' },
                     { 
                         type: 'transport', 
                         title: '取車：日産レンタカー', 
@@ -121,29 +129,31 @@
                         tips: '密碼: 17f23cd8 / 總額: ¥148,632 (現場付)' 
                     }, 
                     { type: 'stay', title: 'Comfort Hotel Nagoya Shinkansenguchi', detail: '名古屋車站太閣通口', nav: 'Comfort Hotel Nagoya Shinkansenguchi', booking: 'CONF#80886535' }, 
-                    { type: 'food', title: '必吃：手羽先 山醬', detail: '胡椒香氣十足的炸雞翅', tips: '必點：幻之手羽先' } 
+                    { type: 'food', title: '必吃：蓬萊軒 鰻魚飯三吃', detail: '名古屋必吃名店，建議提早抽號碼牌。', tips: '必點：Hitsumabushi', tabelog: 'https://tabelog.com/aichi/A2301/A230112/23000063/' },
+                    { type: 'food', title: '必吃：世界的山醬', detail: '夢幻手羽先，胡椒味重很下酒。', tips: '宵夜首選', tabelog: 'https://tabelog.com/aichi/A2301/A230103/23000084/' } 
                 ] 
             },
             { 
                 day: "Day 2", 
                 date: "4/12 (日)", 
                 location: "高山 Takayama", 
-                weather: "8°C - 15°C ☁️", 
+                lat: 36.14, lon: 137.25,
                 events: [ 
-                    { type: 'transport', title: '自駕前往高山', detail: '路程約 160km / 2.5小時。中途可停飛驒古川。', tips: '建議加購 CEP 高速公路 Pass' }, 
+                    { type: 'transport', title: '自駕前往高山', detail: '路程約 160km / 2.5小時。', tips: '建議加購 CEP 高速公路 Pass' }, 
                     { type: 'attraction', title: '飛驒古川 瀨戶川鯉魚', detail: '《你的名字》場景巡禮，白壁土藏街散策。', nav: '飛驒古川白壁土藏街' },
                     { type: 'stay', title: 'hotel around TAKAYAMA', detail: 'Ascend Hotel Collection', booking: 'CONF#78677355', nav: 'hotel around TAKAYAMA' }, 
-                    { type: 'food', title: '必吃：丸明 飛驒牛燒肉', detail: '高山地區最知名和牛店', tips: '必點：飛驒牛盛合' } 
+                    { type: 'food', title: '推薦：味藏天國 (燒肉)', detail: 'JA農協直營，飛驒牛品質有保證。', tips: '熱門店需排隊', tabelog: 'https://tabelog.com/gifu/A2104/A210401/21000287/' },
+                    { type: 'food', title: '推薦：丸明 (燒肉)', detail: '高山老字號精肉店直營。', tips: 'CP值高', tabelog: 'https://tabelog.com/gifu/A2104/A210401/21000041/' } 
                 ] 
             },
             { 
                 day: "Day 3", 
                 date: "4/13 (一)", 
                 location: "奧飛驒 / 高山", 
-                weather: "4°C - 12°C 🏔️", 
+                lat: 36.22, lon: 137.52, 
                 events: [ 
                     { type: 'attraction', title: '新穗高雙層纜車', detail: '標高 2156m 壯闊雪山景', nav: '新穗高纜車', highlight: '山上與山下溫差大，備厚外套' },
-                    { type: 'food', title: '平湯溫泉', detail: '回程可於平湯溫泉休息或泡足湯', nav: '平湯溫泉' }, 
+                    { type: 'food', title: 'Center4 Hamburgers', detail: '超人氣飛驒牛漢堡，歐美客最愛。', tips: '店內裝潢很有特色', tabelog: 'https://tabelog.com/gifu/A2104/A210401/21008670/' }, 
                     { type: 'stay', title: 'hotel around TAKAYAMA (續住)', detail: 'Ascend Hotel Collection', nav: 'hotel around TAKAYAMA' } 
                 ] 
             },
@@ -151,9 +161,10 @@
                 day: "Day 4", 
                 date: "4/14 (二)", 
                 location: "高山祭 (Day 1)", 
-                weather: "7°C - 14°C 🌸", 
+                lat: 36.14, lon: 137.25,
                 events: [ 
                     { type: 'attraction', title: '春之高山祭 (山王祭)', detail: '【全日】欣賞屋台遊行、機關人偶表演。', highlight: '重要：祭典期間市區交管，請步行前往' }, 
+                    { type: 'food', title: '小吃：坂口屋 (飛驒牛握壽司)', detail: '老街上的排隊名店，盛在仙貝上。', tabelog: 'https://tabelog.com/gifu/A2104/A210401/21000020/' },
                     { type: 'stay', title: 'hotel around TAKAYAMA (續住)', detail: 'Ascend Hotel Collection', nav: 'hotel around TAKAYAMA' } 
                 ] 
             },
@@ -161,54 +172,60 @@
                 day: "Day 5", 
                 date: "4/15 (三)", 
                 location: "高山祭 ➔ 富山", 
-                weather: "10°C - 16°C 🚗", 
+                lat: 36.69, lon: 137.21,
                 events: [ 
                     { type: 'attraction', title: '春之高山祭 (Day 2)', detail: '繼續參與祭典活動至下午。' }, 
-                    { type: 'transport', title: '前往富山', detail: '約 17:00 出發，車程約 1.5 小時。', tips: '晚餐建議在富山車站周邊享用' },
+                    { type: 'transport', title: '前往富山', detail: '約 17:00 出發，車程約 1.5 小時。' },
+                    { type: 'food', title: '必吃：白蝦亭 (白えび亭)', detail: '位於富山車站，富山灣寶石「白蝦天丼」。', tips: '車站內必吃', tabelog: 'https://tabelog.com/toyama/A1601/A160101/16000041/' },
                     { type: 'stay', title: 'Comfort Hotel Toyama', detail: '富山車站旁', booking: 'CONF#80924504', nav: 'Comfort Hotel Toyama' } 
                 ] 
             },
             { 
                 day: "Day 6", 
                 date: "4/16 (四)", 
-                location: "立山黑部", 
-                weather: "-2°C - 5°C ❄️", 
+                location: "立山黑部 (室堂)", 
+                lat: 36.57, lon: 137.60,
                 events: [ 
                     { type: 'transport', title: '自駕至立山站', detail: '私家車終點，轉乘登山交通', nav: '立山站' }, 
                     { type: 'attraction', title: '立山黑部雪之大谷', detail: '開山第二天！壯觀雪牆', highlight: '必做預約：立山登山纜車預約' }, 
+                    { type: 'food', title: '迴轉豐山壽司 (廻転とやま鮨)', detail: '富山車站旁人氣壽司，食材新鮮。', tips: '晚餐推薦', tabelog: 'https://tabelog.com/toyama/A1601/A160101/16007229/' },
                     { type: 'stay', title: 'Comfort Hotel Toyama (續住)', detail: '富山車站旁', nav: 'Comfort Hotel Toyama' } 
                 ] 
             },
             { 
                 day: "Day 7", 
                 date: "4/17 (五)", 
-                location: "富山 ➔ 名古屋", 
-                weather: "12°C - 19°C ✨", 
+                location: "桑名市 (名花之里)", 
+                lat: 35.08, lon: 136.70, 
                 events: [ 
                     { type: 'attraction', title: '雨晴海岸', detail: '隔著海眺望立山連峰 (建議上午前往)', nav: '雨晴海岸' },
                     { type: 'transport', title: '開車南下', detail: '經東海北陸道回名古屋 (約3小時)' },
                     { type: 'attraction', title: '名花之里 (Nabana no Sato)', detail: '日本最大規模夜間點燈', nav: '名花之里', highlight: '下午四點前入場可先看花園' }, 
+                    { type: 'food', title: '推薦：山本屋本店 (味噌烏龍麵)', detail: '名古屋名物，麵條口感偏硬有嚼勁。', tips: '回名古屋晚餐', tabelog: 'https://tabelog.com/aichi/A2301/A230103/23000122/' },
                     { type: 'stay', title: 'Comfort Hotel Nagoya Fushimi', detail: '名古屋市區伏見站', booking: 'CONF#80924952', nav: 'Comfort Hotel Nagoya Fushimi' } 
                 ] 
             },
             { 
                 day: "Day 8", 
                 date: "4/18 (六)", 
-                location: "長久手 / 常滑", 
-                weather: "13°C - 20°C 🏠", 
+                location: "長久手 (吉卜力)", 
+                lat: 35.17, lon: 137.09,
                 events: [ 
                     { type: 'attraction', title: '吉卜力公園 Ghibli Park', detail: '需預約，重現宮崎駿經典', nav: '吉卜力公園', highlight: '重要預約代號：GHP-2026-XXXX' }, 
+                    { type: 'food', title: '推薦：丸哈食堂 (まるは食堂)', detail: '中部機場或常滑有名的大炸蝦定食。', tips: '巨無霸炸蝦', tabelog: 'https://tabelog.com/aichi/A2304/A230402/23001853/' },
                     { type: 'stay', title: 'Comfort Hotel Central Int Airport', detail: '機場分館', booking: 'CONF#80889756', nav: 'Comfort Hotel Central International Airport' } 
                 ] 
             },
             { 
                 day: "Day 9", 
                 date: "4/19 (日)", 
-                location: "機場返台", 
-                weather: "15°C 🛫", 
+                location: "中部國際機場", 
+                lat: 34.86, lon: 136.81,
                 events: [ 
                     { type: 'shopping', title: '中部機場最後採買', tips: '必買：えびせん貝の里 蝦餅、赤福' }, 
-                    { type: 'transport', title: '還車：日産レンタカー', detail: '中部国際空港店 (Tel: 0569-38-1123)', tips: '請保留最後一次加滿油的收據' } 
+                    { type: 'food', title: '矢場頓 (機場店)', detail: '最後機會再吃一次味噌豬排。', tabelog: 'https://tabelog.com/aichi/A2304/A230402/23005511/' },
+                    { type: 'transport', title: '還車：日産レンタカー', detail: '中部国際空港店 (Tel: 0569-38-1123)', tips: '請保留最後一次加滿油的收據' },
+                    { type: 'transport', title: '航班：CI 0155', detail: '12:20 名古屋(NGO) ➔ 14:30 台北(TPE)', booking: '訂位代號: FK3SJX' }
                 ] 
             }
         ];
@@ -239,6 +256,7 @@
         // --- 初始化 ---
         document.addEventListener('DOMContentLoaded', () => {
             fetchRate();
+            fetchLocalWeather();
             renderApp();
             lucide.createIcons();
         });
@@ -248,7 +266,99 @@
             fetch('https://api.exchangerate-api.com/v4/latest/JPY')
                 .then(res => res.json())
                 .then(data => { if(data.rates.TWD) exchangeRate = data.rates.TWD; })
-                .catch(e => console.log('Rate fetch error, using default', e));
+                .catch(e => console.log('Rate fetch error', e));
+        }
+
+        // --- 氣象功能 ---
+        function fetchLocalWeather() {
+            const tempEl = document.getElementById('local-temp');
+            if (navigator.geolocation) {
+                // 顯示 loading 狀態
+                tempEl.innerText = '...';
+                
+                navigator.geolocation.getCurrentPosition(
+                    async (position) => {
+                        try {
+                            const lat = position.coords.latitude;
+                            const lon = position.coords.longitude;
+                            const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m&timezone=auto`);
+                            const data = await res.json();
+                            if (data.current) {
+                                tempEl.innerText = `${Math.round(data.current.temperature_2m)}°C`;
+                            }
+                        } catch (e) { 
+                            console.warn("Local weather error", e); 
+                            tempEl.innerText = 'N/A';
+                        }
+                    },
+                    (error) => {
+                        console.log("Geolocation denied or timeout."); 
+                        tempEl.innerText = '未定位'; // Not located
+                    }
+                );
+            } else {
+                tempEl.innerText = 'N/A';
+            }
+        }
+
+        async function fetchDayWeather(idx) {
+            const day = itineraryData[idx];
+            if (!day.lat || !day.lon) return;
+
+            // 檢查 DOM 元素是否存在
+            const statContainer = document.getElementById(`weather-stats-${idx}`);
+            if (!statContainer) return; // 如果找不到元素，直接返回
+
+            try {
+                // Open-Meteo API Fetch
+                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${day.lat}&longitude=${day.lon}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,uv_index_max&timezone=Asia%2FTokyo&forecast_days=1`);
+                const data = await res.json();
+                
+                // AQI Fetch
+                let aqi = '-';
+                try {
+                    const aqiRes = await fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${day.lat}&longitude=${day.lon}&daily=us_aqi_max&timezone=Asia%2FTokyo&forecast_days=1`);
+                    const aqiData = await aqiRes.json();
+                    if(aqiData.daily && aqiData.daily.us_aqi_max) aqi = aqiData.daily.us_aqi_max[0];
+                } catch(e) {}
+
+                if (data.daily) {
+                    const max = Math.round(data.daily.temperature_2m_max[0]);
+                    const min = Math.round(data.daily.temperature_2m_min[0]);
+                    const rain = data.daily.precipitation_probability_max[0];
+                    const uv = data.daily.uv_index_max[0];
+                    const code = data.daily.weather_code[0];
+
+                    // Weather Icon Logic
+                    let iconHtml = '<i data-lucide="sun" class="w-8 h-8 text-orange-400"></i>';
+                    if (code > 3) iconHtml = '<i data-lucide="cloud" class="w-8 h-8 text-gray-400"></i>';
+                    if (code >= 51) iconHtml = '<i data-lucide="cloud-rain" class="w-8 h-8 text-blue-400"></i>';
+                    if (code >= 71) iconHtml = '<i data-lucide="snowflake" class="w-8 h-8 text-blue-200"></i>';
+
+                    // Update UI
+                    statContainer.innerHTML = `
+                        <div class="flex items-center justify-between bg-white/50 p-3 rounded-xl border border-stone-100">
+                            <div>
+                                <div class="flex items-end gap-2">
+                                    <span class="text-3xl font-bold text-stone-800">${max}°</span>
+                                    <span class="text-sm text-stone-500 mb-1">/ ${min}°</span>
+                                </div>
+                                <div class="flex gap-2 mt-1">
+                                    <span class="weather-stat-box text-blue-600"><i data-lucide="umbrella" class="w-3 h-3"></i> ${rain}%</span>
+                                    <span class="weather-stat-box text-orange-600"><i data-lucide="sun" class="w-3 h-3"></i> UV ${uv}</span>
+                                    <span class="weather-stat-box text-green-600"><i data-lucide="wind" class="w-3 h-3"></i> AQI ${aqi}</span>
+                                </div>
+                            </div>
+                            <div>${iconHtml}</div>
+                        </div>
+                        <p class="text-[10px] text-center text-stone-400 mt-1">顯示當地近日氣象 (僅供參考)</p>
+                    `;
+                    lucide.createIcons(); // Re-render icons
+                }
+            } catch (e) {
+                console.error("Weather fetch error", e);
+                statContainer.innerHTML = '<div class="text-xs text-stone-400">暫無法取得氣象資訊</div>';
+            }
         }
 
         // --- 核心渲染邏輯 ---
@@ -316,22 +426,28 @@
             }
         }
 
-        // 1. 行程視圖 (加入景點介紹按鈕)
+        // 1. 行程視圖 (加入景點介紹按鈕 & Tabelog)
         function renderItineraryView(container) {
             const dayData = itineraryData[activeDay];
             
+            // Trigger weather fetch after render
+            setTimeout(() => fetchDayWeather(activeDay), 50);
+
             let html = `
                 <div class="animate-in">
-                    <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center justify-between mb-4">
                         <div>
                             <h2 class="text-2xl font-bold text-stone-900">${dayData.location}</h2>
                             <p class="text-stone-500 flex items-center gap-1 mt-1 font-medium">
                                 <i data-lucide="calendar" class="w-4 h-4"></i> ${dayData.date}
                             </p>
                         </div>
-                        <div class="text-right">
-                            <p class="text-sm font-bold text-stone-700">${dayData.weather}</p>
-                            <p class="text-[10px] text-stone-400 uppercase tracking-widest font-bold">Forecast</p>
+                    </div>
+
+                    <!-- Weather Widget Container -->
+                    <div id="weather-stats-${activeDay}" class="mb-6 min-h-[80px]">
+                        <div class="flex items-center gap-2 text-stone-400 text-sm animate-pulse">
+                            <i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> 載入氣象資訊...
                         </div>
                     </div>
 
@@ -356,6 +472,13 @@
                                             <button onclick="openDetailModal('${event.title}')" class="mt-3 flex items-center gap-2 bg-amber-100 text-amber-700 px-3 py-2 rounded-lg text-xs font-bold hover:bg-amber-200 transition-colors">
                                                 <i data-lucide="book-open" class="w-4 h-4"></i> 📖 景點故事
                                             </button>
+                                        ` : ''}
+
+                                        <!-- Tabelog 按鈕 (Replaced Image with Icon) -->
+                                        ${event.tabelog ? `
+                                            <a href="${event.tabelog}" target="_blank" class="mt-3 flex items-center gap-2 bg-rose-500 text-white px-3 py-2 rounded-lg text-xs font-bold hover:bg-rose-600 transition-colors shadow-sm w-fit">
+                                                <i data-lucide="utensils-crossed" class="w-4 h-4"></i> Tabelog 預約 / 資訊
+                                            </a>
                                         ` : ''}
                                     </div>
                                 </div>
@@ -515,7 +638,7 @@
                         </div>
                     </div>
 
-                    <!-- 免稅湊單 -->
+                    <!-- 免稅湊單 (Fixed Layout) -->
                     <div class="bg-white p-5 rounded-2xl shadow-sm border border-stone-100">
                         <div class="flex justify-between items-center mb-3">
                             <h3 class="font-bold text-stone-800 flex items-center gap-2"><i data-lucide="calculator" class="text-pink-500 w-5 h-5"></i> 免稅湊單 (5500円)</h3>
@@ -523,9 +646,9 @@
                         </div>
                         <div class="bg-pink-50 p-4 rounded-xl border border-pink-100">
                             <div class="flex gap-2 mb-2">
-                                <input id="batch-name" placeholder="品名" class="flex-1 p-2 rounded text-xs outline-none">
+                                <input id="batch-name" placeholder="品名" class="flex-1 p-2 rounded text-xs outline-none min-w-0">
                                 <input id="batch-price" type="number" placeholder="¥單價" class="w-20 p-2 rounded text-xs outline-none">
-                                <button onclick="addBatchItem()" class="bg-pink-500 text-white px-3 rounded text-xs"><i data-lucide="plus" class="w-3 h-3"></i></button>
+                                <button onclick="addBatchItem()" class="bg-pink-500 text-white px-3 rounded text-xs flex-shrink-0"><i data-lucide="plus" class="w-3 h-3"></i></button>
                             </div>
                             <div id="batch-list" class="bg-white/50 rounded-lg p-2 mb-3 max-h-32 overflow-y-auto hidden"></div>
                             
@@ -542,7 +665,7 @@
                         </div>
                     </div>
 
-                    <!-- 購物記帳 -->
+                    <!-- 購物記帳 (Fixed Layout) -->
                     <div class="bg-white p-5 rounded-2xl shadow-sm border border-stone-100">
                         <div class="flex justify-between items-center mb-3">
                             <h3 class="font-bold text-stone-800 flex items-center gap-2"><i data-lucide="shopping-bag" class="text-purple-500 w-5 h-5"></i> 購物記帳</h3>
@@ -554,9 +677,9 @@
                             <p id="total-twd" class="text-xs text-stone-500 mt-1">約台幣 NT$ 0</p>
                         </div>
                         <div class="flex gap-2 mb-4">
-                            <input id="budget-name" placeholder="品項" class="flex-1 p-2 bg-stone-100 rounded-lg text-xs outline-none">
+                            <input id="budget-name" placeholder="品項" class="flex-1 p-2 bg-stone-100 rounded-lg text-xs outline-none min-w-0">
                             <input id="budget-price" type="number" placeholder="¥" class="w-20 p-2 bg-stone-100 rounded-lg text-xs outline-none">
-                            <button onclick="addBudgetItem()" class="bg-stone-800 text-white px-3 rounded-lg"><i data-lucide="plus" class="w-4 h-4"></i></button>
+                            <button onclick="addBudgetItem()" class="bg-stone-800 text-white px-3 rounded-lg flex-shrink-0"><i data-lucide="plus" class="w-4 h-4"></i></button>
                         </div>
                         <ul id="budget-list" class="space-y-2 max-h-60 overflow-y-auto"></ul>
                     </div>

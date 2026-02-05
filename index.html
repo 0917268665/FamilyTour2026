@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>昇龍道自駕2026家庭旅遊</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -15,7 +15,7 @@
             --bg-paper: #f9f8f6;
             --text-main: #2c2c2c;
             --text-sub: #8c8c8c;
-            --accent: #b08d76;
+            --accent: #b08d76; /* 莫蘭迪棕 */
             --accent-light: #f0ebe7;
         }
 
@@ -24,6 +24,8 @@
             background-color: var(--bg-paper); 
             color: var(--text-main); 
             -webkit-tap-highlight-color: transparent;
+            /* 針對 iPhone瀏海設計 */
+            padding-top: env(safe-area-inset-top);
         }
 
         h1, h2, h3, .serif { font-family: 'Noto Serif TC', serif; }
@@ -53,6 +55,7 @@
             background: rgba(249, 248, 246, 0.95);
             backdrop-filter: blur(10px);
             border-top: 1px solid rgba(0,0,0,0.05);
+            padding-bottom: env(safe-area-inset-bottom);
         }
         .nav-item.active { color: #2c2c2c; }
         .nav-item.active i { stroke-width: 2.5px; }
@@ -67,26 +70,29 @@
         input:checked + div { background-color: #2c2c2c; border-color: #2c2c2c; }
         input:checked + div .check-icon { opacity: 1; transform: scale(1); }
         input:checked ~ span { text-decoration: line-through; color: #b0b0b0; }
+        
+        /* 確保 Header 背景不透明，避免混淆 */
+        #header { background-color: rgba(249, 248, 246, 0.98); }
     </style>
 </head>
 <body class="pb-24">
 
-    <!-- Header -->
-    <div class="fixed top-0 left-0 right-0 z-30 bg-[#f9f8f6]/95 backdrop-blur-sm px-6 pt-12 pb-2 transition-all shadow-sm" id="header">
-        <div class="text-center mb-4">
-            <p class="text-[10px] tracking-[0.3em] text-stone-400 uppercase mb-2">Family Trip</p>
-            <h1 class="text-2xl font-bold tracking-widest text-stone-800">昇龍道自駕 <span class="border border-stone-800 rounded-full px-2 text-sm font-normal align-middle ml-1">2026 / 04</span></h1>
+    <!-- Header (調整 padding) -->
+    <div class="fixed top-0 left-0 right-0 z-30 backdrop-blur-md px-6 pt-4 pb-2 transition-all shadow-sm border-b border-stone-200/50" id="header">
+        <div class="text-center mb-2">
+            <p class="text-[10px] tracking-[0.3em] text-stone-400 uppercase mb-1">Family Trip</p>
+            <h1 class="text-xl font-bold tracking-widest text-stone-800">中部自駕 <span class="border border-stone-800 rounded-full px-2 text-xs font-normal align-middle ml-1">2026.04</span></h1>
         </div>
         
         <!-- Day Scroll -->
-        <div id="day-selector" class="flex overflow-x-auto gap-6 no-scrollbar justify-start px-2 pb-4 snap-x transition-all duration-300"></div>
+        <div id="day-selector" class="flex overflow-x-auto gap-6 no-scrollbar justify-start px-2 pb-2 snap-x transition-all duration-300"></div>
     </div>
 
     <!-- Main Scroll Area -->
     <div id="main-container" class="pt-48 px-5 min-h-screen"></div>
 
     <!-- Navigation -->
-    <div class="nav-blur fixed bottom-0 left-0 right-0 px-6 py-4 flex justify-between items-center z-40">
+    <div class="nav-blur fixed bottom-0 left-0 right-0 px-6 py-3 flex justify-between items-center z-40">
         <button onclick="switchTab('itinerary')" id="nav-itinerary" class="nav-item active flex flex-col items-center gap-1"><i data-lucide="map" class="w-5 h-5"></i><span class="text-[9px] font-bold tracking-widest">行程</span></button>
         <button onclick="switchTab('hotels')" id="nav-hotels" class="nav-item flex flex-col items-center gap-1"><i data-lucide="bed-double" class="w-5 h-5"></i><span class="text-[9px] font-bold tracking-widest">住宿</span></button>
         <button onclick="switchTab('drive')" id="nav-drive" class="nav-item flex flex-col items-center gap-1"><i data-lucide="car" class="w-5 h-5"></i><span class="text-[9px] font-bold tracking-widest">自駕</span></button>
@@ -140,7 +146,7 @@
                 { 
                     time: "13:30", type: "FOOD", title: "午餐：蓬萊軒", sub: "鰻魚飯三吃 (Hitsumabushi)", 
                     address: "愛知県名古屋市熱田区神戸町503", tel: "052-671-8686",
-                    desc: "【百年老店的堅持】\n蓬萊軒是「鰻魚飯三吃」的發源地。他們的醬汁是創業以來代代相傳的「秘傳醬汁」，每一口都是歷史的味道。\n\n【三吃法教學】\n1. 第一碗：品嚐鰻魚與醬汁的原味。\n2. 第二碗：加入海苔、蔥花、山葵等佐料。\n3. 第三碗：淋上高湯做成茶泡飯。",
+                    desc: "【百年老店的堅持】\n蓬萊軒是「鰻魚飯三吃」的發源地。他們的醬汁是創業以來代代相傳的「秘傳醬汁」，每一口都是歷史的味道。\n\n【三吃法教學】\n1. 第一碗：品嚐鰻魚與醬汁的原味。\n2. 第二碗：加入海苔、蔥花、山葵等佐料，口感更清爽。\n3. 第三碗：淋上高湯做成茶泡飯，完美收尾。",
                     menu: [ { name: "鰻魚飯三吃", jp: "ひつまぶし", price: "¥4,600" }, { name: "鰻魚玉子燒", jp: "うまき", price: "¥1,200" } ],
                     speak: [{label:"我有預約", jp:"予約しています"}, {label:"有推薦的嗎", jp:"おすすめは？"}],
                     tabelog: 'https://tabelog.com/aichi/A2301/A230112/23000063/'
@@ -162,12 +168,12 @@
                 { 
                     time: "12:00", type: "SIGHT", title: "飛驒古川", sub: "你的名字 聖地巡禮",
                     address: "岐阜県飛騨市古川町", mapcode: "191 548 574*63",
-                    desc: "【比高山更靜謐的白壁土藏】\n如果您喜歡電影《你的名字》，這裡絕對是必訪聖地。瀧尋找三葉的車站、圖書館都在這裡。\n\n【瀨戶川與鯉魚】\n這條流經白壁土藏街的小河川，飼養著上千條色彩斑斕的錦鯉。"
+                    desc: "【比高山更靜謐的白壁土藏】\n如果您喜歡電影《你的名字》，這裡絕對是必訪聖地。瀧尋找三葉的車站、圖書館都在這裡。\n\n【瀨戶川與鯉魚】\n這條流經白壁土藏街的小河川，飼養著上千條色彩斑斕的錦鯉。冬天時為了怕鯉魚凍死，居民會將牠們搬家到較溫暖的池塘，春天再搬回來，是當地特有的「鯉魚搬家」習俗。"
                 },
                 { 
                     time: "17:00", type: "FOOD", title: "晚餐：味藏天國", sub: "JA農協直營 飛驒牛燒肉",
                     address: "岐阜県高山市花里4-147", tel: "0577-37-1129",
-                    desc: "【絕對不會踩雷的飛驒牛】\n這家店是JA（日本農協）直營的，這意味著肉源絕對新鮮、品質由農協掛保證，而且價格比一般高級燒肉店親民。\n\n【部位推薦】\n如果預算足夠，直上「飛驒牛盛合（拼盤）」，可以一次吃到里肌、五花、骰子牛等不同部位。",
+                    desc: "【絕對不會踩雷的飛驒牛】\n這家店是JA（日本農協）直營的，這意味著肉源絕對新鮮、品質由農協掛保證，而且價格比一般高級燒肉店親民。\n\n【部位推薦】\n如果預算足夠，直上「飛驒牛盛合（拼盤）」，可以一次吃到里肌、五花、骰子牛等不同部位，感受油脂在口中融化的幸福感。",
                     menu: [ { name: "味藏拼盤", jp: "味蔵盛り", price: "¥9,800" }, { name: "特上牛五花", jp: "特上カルビ", price: "¥2,480" } ],
                     tabelog: 'https://tabelog.com/gifu/A2104/A210401/21000287/'
                 },
@@ -181,12 +187,12 @@
                 { 
                     time: "09:30", type: "SIGHT", title: "新穗高雙層纜車", sub: "標高2156m 雲上市界",
                     address: "岐阜県高山市奥飛騨温泉郷新穂高", tel: "0578-89-2252",
-                    desc: "【米其林二星絕景】\n這是日本唯一的雙層纜車！山頂的展望台可以看到槍之岳、穗高連峰的 360 度全景。"
+                    desc: "【米其林二星絕景】\n這是日本唯一的雙層纜車！山頂的展望台可以看到槍之岳、穗高連峰的 360 度全景。\n\n【導遊小撇步】\n山頂與山下溫差很大，請務必帶著外套。山頂有名物「雲頂麵包」，可以在雲端上享受下午茶。"
                 },
                 { 
                     time: "13:00", type: "FOOD", title: "午餐：Center4 Hamburgers", sub: "歐美客最愛 飛驒牛漢堡",
                     address: "岐阜県高山市上一之町94", tel: "0577-36-4527",
-                    desc: "【藏在古民家裡的漢堡店】\n推開門是濃濃的美式復古風。這裡的飛驒牛漢堡排多汁厚實，咬下去肉汁會噴發。",
+                    desc: "【藏在古民家裡的漢堡店】\n雖然外觀是傳統的日式古民家，推開門卻是濃濃的美式復古風。這裡的飛驒牛漢堡排多汁厚實，咬下去肉汁會噴發，是TripAdvisor上高山排名第一的名店。\n\n⚠️ 注意：店家座位極少，強烈建議一開店就去，或是有排隊的心理準備。",
                     menu: [ { name: "飛驒牛漢堡", jp: "飛騨牛バーガー", price: "¥2,850" }, { name: "酪梨起司漢堡", jp: "アボカドチーズ", price: "¥1,450" } ],
                     tabelog: 'https://tabelog.com/gifu/A2104/A210401/21008670/'
                 },
@@ -205,7 +211,7 @@
                 { 
                     time: "12:00", type: "FOOD", title: "小吃：坂口屋", sub: "飛驒牛握壽司",
                     address: "岐阜県高山市上三之町90",
-                    desc: "【老街散步美食】\n他們的飛驒牛握壽司不是放在盤子上，而是放在一片「仙貝」上，吃完壽司連盤子一起吃掉，環保又美味！\n牛肉表面稍微炙燒過，油脂香氣逼人，入口即化。",
+                    desc: "【老街散步美食】\n這家是老街上最有名的小吃店之一。他們的飛驒牛握壽司不是放在盤子上，而是放在一片「仙貝」上，吃完壽司連盤子一起吃掉，環保又美味！\n牛肉表面稍微炙燒過，油脂香氣逼人，入口即化。",
                     menu: [ { name: "飛驒牛握壽司(2貫)", jp: "飛騨牛にぎり寿司", price: "¥800" } ],
                     tabelog: 'https://tabelog.com/gifu/A2104/A210401/21000020/'
                 },
@@ -221,7 +227,7 @@
                 { 
                     time: "19:00", type: "FOOD", title: "晚餐：白えび亭 (白蝦亭)", sub: "富山灣的寶石",
                     address: "富山県富山市明輪町1-220 (富山站內)", tel: "076-433-0355",
-                    desc: "【富山灣的寶石】\n白蝦亭位於富山車站旁，最出名的就是「白蝦天丼」。\n\n每一碗天丼都鋪滿了數十隻手工剝殼的白蝦，炸得酥脆鮮甜，完全不需要沾醬就非常好吃！",
+                    desc: "【富山灣的寶石】\n來到富山，絕對不能錯過「白蝦」。這種蝦子只有在富山灣這獨特地形才能大量捕獲。白蝦亭位於富山車站旁，最出名的就是「白蝦天丼」。\n\n每一碗天丼都鋪滿了數十隻手工剝殼的白蝦，炸得酥脆鮮甜，完全不需要沾醬就非常好吃！",
                     menu: [ { name: "白蝦天丼", jp: "白えび天丼", price: "¥1,680" }, { name: "白蝦刺身丼", jp: "白えび刺身丼", price: "¥2,980" } ],
                     tabelog: 'https://tabelog.com/toyama/A1601/A160101/16000041/'
                 },
@@ -254,7 +260,7 @@
                 { 
                     time: "09:00", type: "SIGHT", title: "雨晴海岸", sub: "海越立山絕景",
                     address: "富山県高岡市太田", mapcode: "128 393 254*55",
-                    desc: "【世界級奇景】\n這是世界上少數可以「隔著大海眺望3000公尺級雪山」的地方。前景是女岩與湛藍的富山灣，背景是雄偉的立山連峰，運氣好遇到晴天時，美得像一幅畫。"
+                    desc: "【世界級奇景】\n這是世界上少數可以「隔著大海眺望3000公尺級雪山」的地方。前景是女岩與湛藍的富山灣，背景是雄偉的立山連峰，運氣好遇到晴天時，美得像一幅畫。\n\n【義經岩傳說】\n海岸邊有一塊巨大的岩石叫做「義經岩」。傳說源義經在被哥哥源賴朝追殺逃亡至北陸時，曾在此岩石下躲避驟雨等待天晴，這也是「雨晴」地名的由來。"
                 },
                 { time: "14:00", type: "DRIVE", title: "南下前往名古屋/三重", desc: "車程約 3 小時", icon: "car" },
                 { 
@@ -279,7 +285,7 @@
                 { 
                     time: "10:00", type: "SIGHT", title: "吉卜力公園", sub: "宮崎駿的夢幻世界",
                     address: "愛知県長久手市茨ケ廻間乙1533-1", 
-                    desc: "【真的走進電影裡】\n這裡不是一般的遊樂園，沒有雲霄飛車，只有滿滿的細節。在「吉卜力大倉庫」裡，您可以和無臉男一起搭電車，或是探訪湯婆婆的辦公室。\n\n記得睜大眼睛尋找角落裡的「煤炭精靈」喔！",
+                    desc: "【真的走進電影裡】\n吉卜力公園位於愛知縣，是將原本的「愛・地球博紀念公園」重新規劃，讓宮崎駿筆下的奇幻世界真實重現。這裡與一般主題樂園最大的不同是——沒有大型雲霄飛車，沒有人偶裝表演，主打「散步、發現、感受」。\n\n【主要區域】\n1. 吉卜力大倉庫：這是室內型的大展覽館，收藏了吉卜力作品的秘密。您可以在這裡與《神隱少女》的無臉男合照，或是看到《天空之城》巨大的機器人兵。\n\n2. 青春之丘：重現了《心之谷》中的古董店「地球屋」，站在高處可以俯瞰園區。\n\n3. Dondoko之森：以《龍貓》為主題，穿過森林步道後，會看到小月和小梅的家。\n\n這裡的每個角落都藏著細節，請放慢腳步，在森林與微風中尋找屬於您的童話回憶吧！",
                     tips: "預約號: GHP-2026-XXXX"
                 },
                 { 
@@ -314,12 +320,18 @@
         ],
         daily: [ { id: 'daily_charger', label: '充電器 / 轉接頭' }, { id: 'daily_wash', label: '盥洗包 / 眼鏡' }, { id: 'daily_wifi', label: '護照 / 隨身貴重物品' }, { id: 'daily_key', label: '房卡已歸還' } ],
         jp: [
-            { jp: 'すみません', romaji: 'Sumimasen', zh: '不好意思' }, { jp: 'トイレはどこですか', romaji: 'Toire wa?', zh: '廁所在哪裡' },
-            { jp: '別々に包んでください', romaji: 'Betsu-betsu ni', zh: '請分開包裝' }, { jp: '免税になりますか', romaji: 'Tax Free?', zh: '可以免稅嗎?' },
-            { jp: '袋は要りません', romaji: 'No Bag', zh: '不用袋子' }, { jp: '新しいのはありますか', romaji: 'New one?', zh: '有新的嗎?' },
-            { jp: 'これをください', romaji: 'Kore o kudasai', zh: '我要這個' }, { jp: 'カードは使えますか', romaji: 'Card OK?', zh: '可以刷卡嗎?' },
-            { jp: 'メニューをください', romaji: 'Menu Please', zh: '請給我菜單' }, { jp: 'お水をください', romaji: 'Water Please', zh: '請給我水' }, 
-            { jp: 'おすすめは？', romaji: 'Recommend?', zh: '有推薦的嗎?' }, { jp: 'お会計をお願いします', romaji: 'Check Bill', zh: '麻煩結帳' }
+            { jp: 'すみません', zh: '不好意思' }, 
+            { jp: 'トイレはどこですか', zh: '廁所在哪裡' },
+            { jp: '別々に包んでください', zh: '請分開包裝' }, 
+            { jp: '免税になりますか', zh: '可以免稅嗎?' },
+            { jp: '袋は要りません', zh: '不用袋子' }, 
+            { jp: '新しいのはありますか', zh: '有新的嗎?' },
+            { jp: 'これをください', zh: '我要這個' }, 
+            { jp: 'カードは使えますか', zh: '可以刷卡嗎?' },
+            { jp: 'メニューをください', zh: '請給我菜單' }, 
+            { jp: 'お水をください', zh: '請給我水' }, 
+            { jp: 'おすすめは？', zh: '有推薦的嗎?' }, 
+            { jp: 'お会計をお願いします', zh: '麻煩結帳' }
         ]
     };
 
@@ -813,21 +825,24 @@
                 <!-- Gas Price -->
                 <div class="bg-white rounded-2xl p-6 shadow-sm border border-stone-100">
                     <div class="flex justify-between items-center mb-4">
-                        <h4 class="font-bold text-stone-800 flex items-center gap-2"><i data-lucide="fuel" class="w-5 h-5 text-red-500"></i> 日本平均油價</h4>
-                        <a href="https://gogo.gs/" target="_blank" class="text-xs text-stone-400 underline">gogo.gs 查詢</a>
+                        <h4 class="font-bold text-stone-800 flex items-center gap-2"><i data-lucide="fuel" class="w-5 h-5 text-[#b08d76]"></i> 即時油價 (參考)</h4>
+                        <a href="https://gogo.gs/" target="_blank" class="text-[10px] text-stone-400 underline flex items-center gap-1">gogo.gs 查價 <i data-lucide="external-link" class="w-3 h-3"></i></a>
                     </div>
-                    <div class="grid grid-cols-3 gap-2 text-center">
-                        <div class="bg-red-50 p-2 rounded-lg border border-red-100">
-                            <p class="text-[10px] text-red-400 mb-1">Regular (紅)</p>
-                            <p class="font-bold text-stone-700">¥170</p>
+                    <div class="grid grid-cols-3 gap-3">
+                        <div class="bg-[#ffebee] border border-red-100 p-3 rounded-xl text-center">
+                            <p class="text-[10px] text-red-400 font-bold mb-1">Regular</p>
+                            <p class="text-xl font-serif font-bold text-red-600">170<span class="text-xs">円</span></p>
+                            <p class="text-[9px] text-red-300 mt-1">紅色油槍</p>
                         </div>
-                        <div class="bg-yellow-50 p-2 rounded-lg border border-yellow-100">
-                            <p class="text-[10px] text-yellow-500 mb-1">High Octane (黃)</p>
-                            <p class="font-bold text-stone-700">¥181</p>
+                        <div class="bg-[#fff8e1] border border-yellow-100 p-3 rounded-xl text-center">
+                            <p class="text-[10px] text-yellow-500 font-bold mb-1">High Octane</p>
+                            <p class="text-xl font-serif font-bold text-yellow-600">181<span class="text-xs">円</span></p>
+                            <p class="text-[9px] text-yellow-400 mt-1">黃色油槍</p>
                         </div>
-                        <div class="bg-green-50 p-2 rounded-lg border border-green-100">
-                            <p class="text-[10px] text-green-500 mb-1">Diesel (綠)</p>
-                            <p class="font-bold text-stone-700">¥148</p>
+                        <div class="bg-[#e8f5e9] border border-green-100 p-3 rounded-xl text-center">
+                            <p class="text-[10px] text-green-500 font-bold mb-1">Diesel</p>
+                            <p class="text-xl font-serif font-bold text-green-600">148<span class="text-xs">円</span></p>
+                            <p class="text-[9px] text-green-400 mt-1">綠色油槍</p>
                         </div>
                     </div>
                     <p class="text-[10px] text-stone-400 mt-2 text-center">*價格僅供參考，請以當地加油站為準</p>
@@ -884,9 +899,9 @@
                     <h3 class="text-sm font-bold text-stone-400 uppercase tracking-widest mb-4 px-1">手指日語</h3>
                     <div class="bg-white rounded-2xl p-5 shadow-sm border border-stone-100 grid grid-cols-2 gap-3">
                         ${TOOLS_DATA.jp.map(p => `
-                            <button onclick="speakJp('${p.jp}')" class="p-4 bg-[#f9f9f9] border border-stone-100 rounded-xl text-left hover:border-stone-300 transition-colors flex flex-col justify-between h-24">
-                                <div class="text-xs text-stone-400 font-bold mb-1">${p.zh}</div>
-                                <div class="font-bold text-stone-800 text-lg leading-tight">${p.jp}</div>
+                            <button onclick="speakJp('${p.jp}')" class="p-4 bg-[#f9f9f9] border border-stone-100 rounded-xl text-left hover:border-stone-300 transition-colors flex flex-col justify-center h-24 shadow-sm active:scale-95">
+                                <div class="text-xs text-stone-400 font-bold mb-2">${p.zh}</div>
+                                <div class="font-serif font-bold text-stone-800 text-xl leading-snug">${p.jp}</div>
                             </button>
                         `).join('')}
                     </div>

@@ -3,927 +3,952 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>昇龍道自駕助手 (AI版)</title>
+    <title>昇龍道自駕手帖 2026</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
-        body { font-family: 'Noto Sans TC', sans-serif; background-color: #fafaf9; color: #44403c; -webkit-tap-highlight-color: transparent; }
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@500;700&family=Zen+Old+Mincho:wght@400;700&display=swap');
+        
+        :root {
+            --bg-paper: #f9f8f6;
+            --text-main: #2c2c2c;
+            --text-sub: #8c8c8c;
+            --accent: #b08d76;
+            --accent-light: #f0ebe7;
+        }
+
+        body { 
+            font-family: 'Noto Sans TC', sans-serif; 
+            background-color: var(--bg-paper); 
+            color: var(--text-main); 
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        h1, h2, h3, .serif { font-family: 'Noto Serif TC', serif; }
+        .jp-font { font-family: 'Zen Old Mincho', serif; }
+
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .active-tab { color: #1c1917; }
-        .inactive-tab { color: #a8a29e; }
-        /* Animations */
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-in { animation: fadeIn 0.3s ease-out forwards; }
-        .weather-stat-box { background-color: rgba(255,255,255,0.6); padding: 4px 8px; border-radius: 8px; font-size: 0.75rem; display: flex; align-items: center; gap: 4px; }
+
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-in { animation: fadeUp 0.5s ease-out forwards; }
+
+        .timeline-line {
+            position: absolute;
+            left: 24px;
+            top: 40px;
+            bottom: -20px;
+            width: 2px;
+            background-image: linear-gradient(to bottom, #e5e5e5 50%, transparent 50%);
+            background-size: 2px 10px;
+            z-index: 0;
+        }
+        .last-item .timeline-line { display: none; }
+
+        .soft-shadow { box-shadow: 0 4px 20px rgba(0,0,0,0.04); }
+        
+        .nav-blur {
+            background: rgba(249, 248, 246, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+        .nav-item.active { color: #2c2c2c; }
+        .nav-item.active i { stroke-width: 2.5px; }
+        .nav-item { color: #b0b0b0; }
+
+        .big-card-modal {
+            background-color: #fffaf5;
+            background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23dcc8b8' fill-opacity='0.1' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
+        }
+        
+        .check-icon { opacity: 0; transform: scale(0.5); transition: all 0.2s; }
+        input:checked + div { background-color: #2c2c2c; border-color: #2c2c2c; }
+        input:checked + div .check-icon { opacity: 1; transform: scale(1); }
+        input:checked ~ span { text-decoration: line-through; color: #b0b0b0; }
     </style>
 </head>
 <body class="pb-24">
 
     <!-- Header -->
-    <div class="bg-white border-b border-stone-200 sticky top-0 z-30 p-4 shadow-sm">
-        <div class="flex items-center justify-between">
-            <div>
-                <h1 class="text-xl font-bold tracking-tight text-stone-900">昇龍道自駕助手 🚙</h1>
-                <p class="text-xs text-stone-500 mt-1 font-medium italic">Travel Guide & Tools</p>
-            </div>
-            
-            <div class="flex items-center gap-3">
-                <!-- Local Weather Display -->
-                <div id="local-weather" class="text-right cursor-pointer" onclick="fetchLocalWeather()">
-                    <div class="text-xs text-stone-400 flex items-center justify-end gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i> 所在地</div>
-                    <div class="font-bold text-stone-800 text-lg leading-none mt-0.5" id="local-temp">點擊定位</div>
-                </div>
-
-                <button onclick="window.open('https://www.google.com/maps/search/?api=1&query=日本中部', '_blank')" class="bg-stone-100 p-2 rounded-full active:scale-95 transition-transform shadow-sm">
-                    <i data-lucide="map" class="w-6 h-6 text-stone-600"></i>
-                </button>
-            </div>
+    <div class="fixed top-0 left-0 right-0 z-30 bg-[#f9f8f6]/95 backdrop-blur-sm px-6 pt-12 pb-2 transition-all shadow-sm" id="header">
+        <div class="text-center mb-4">
+            <p class="text-[10px] tracking-[0.3em] text-stone-400 uppercase mb-2">Family Trip</p>
+            <h1 class="text-2xl font-bold tracking-widest text-stone-800">中部自駕 <span class="border border-stone-800 rounded-full px-2 text-sm font-normal align-middle ml-1">2026</span></h1>
         </div>
         
-        <!-- Day Selector (Only visible in Itinerary tab) -->
-        <div id="day-selector-container" class="flex overflow-x-auto mt-4 gap-2 no-scrollbar pb-2 transition-all">
-            <!-- Injected by JS -->
-        </div>
+        <!-- Day Scroll -->
+        <div id="day-selector" class="flex overflow-x-auto gap-6 no-scrollbar justify-start px-2 pb-4 snap-x transition-all duration-300"></div>
     </div>
 
-    <!-- Main Content -->
-    <div id="main-content" class="p-4 max-w-md mx-auto min-h-screen">
-        <!-- Content injected by JS -->
+    <!-- Main Scroll Area -->
+    <div id="main-container" class="pt-48 px-5 min-h-screen"></div>
+
+    <!-- Navigation -->
+    <div class="nav-blur fixed bottom-0 left-0 right-0 px-6 py-4 flex justify-between items-center z-40">
+        <button onclick="switchTab('itinerary')" id="nav-itinerary" class="nav-item active flex flex-col items-center gap-1"><i data-lucide="map" class="w-5 h-5"></i><span class="text-[9px] font-bold tracking-widest">行程</span></button>
+        <button onclick="switchTab('hotels')" id="nav-hotels" class="nav-item flex flex-col items-center gap-1"><i data-lucide="bed-double" class="w-5 h-5"></i><span class="text-[9px] font-bold tracking-widest">住宿</span></button>
+        <button onclick="switchTab('drive')" id="nav-drive" class="nav-item flex flex-col items-center gap-1"><i data-lucide="car" class="w-5 h-5"></i><span class="text-[9px] font-bold tracking-widest">自駕</span></button>
+        <button onclick="switchTab('tools')" id="nav-tools" class="nav-item flex flex-col items-center gap-1"><i data-lucide="briefcase" class="w-5 h-5"></i><span class="text-[9px] font-bold tracking-widest">工具</span></button>
     </div>
 
-    <!-- Navigation Bar -->
-    <div class="fixed bottom-6 left-4 right-4 bg-white/95 backdrop-blur border border-stone-200 p-3 flex justify-around items-center z-40 max-w-md mx-auto rounded-3xl shadow-2xl">
-        <button onclick="switchTab('itinerary')" id="nav-itinerary" class="nav-btn flex flex-col items-center gap-1 active-tab">
-            <i data-lucide="calendar" class="w-5 h-5"></i>
-            <span class="text-[10px] font-bold uppercase">行程</span>
-        </button>
-        <button onclick="switchTab('hotels')" id="nav-hotels" class="nav-btn flex flex-col items-center gap-1 inactive-tab">
-            <i data-lucide="home" class="w-5 h-5"></i>
-            <span class="text-[10px] font-bold uppercase">住宿</span>
-        </button>
-        <button onclick="switchTab('drive')" id="nav-drive" class="nav-btn flex flex-col items-center gap-1 inactive-tab">
-            <i data-lucide="car" class="w-5 h-5"></i>
-            <span class="text-[10px] font-bold uppercase">自駕</span>
-        </button>
-        <button onclick="switchTab('tools')" id="nav-tools" class="nav-btn flex flex-col items-center gap-1 inactive-tab">
-            <i data-lucide="shopping-bag" class="w-5 h-5"></i>
-            <span class="text-[10px] font-bold uppercase">工具</span>
-        </button>
-    </div>
-
-    <!-- Detail Modal -->
-    <div id="detail-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in" onclick="closeDetailModal()">
-        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden" onclick="event.stopPropagation()">
-            <div class="bg-stone-900 text-white p-4 flex justify-between items-center">
-                <h3 id="modal-title" class="font-bold text-lg flex items-center gap-2"><i data-lucide="book-open" class="w-5 h-5 text-amber-400"></i> 景點故事</h3>
-                <button onclick="closeDetailModal()" class="p-1 rounded-full hover:bg-white/20"><i data-lucide="x" class="w-5 h-5"></i></button>
-            </div>
-            <div class="p-6 max-h-[70vh] overflow-y-auto">
-                <p id="modal-content" class="text-stone-700 leading-relaxed text-justify whitespace-pre-line text-sm"></p>
-            </div>
-            <div class="p-4 border-t border-stone-100 bg-stone-50 flex justify-end">
-                <button onclick="speakContent()" class="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-xl font-bold transition-all shadow-md active:scale-95">
-                    <i data-lucide="volume-2" class="w-5 h-5"></i> 朗讀介紹
+    <!-- Modal: Spot Detail -->
+    <div id="detail-modal" class="fixed inset-0 z-50 hidden flex items-end sm:items-center justify-center pointer-events-none">
+        <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px] transition-opacity opacity-0 pointer-events-auto" id="modal-backdrop" onclick="closeModal()"></div>
+        <div class="bg-white w-full max-w-md h-[85vh] sm:h-[800px] sm:rounded-2xl rounded-t-3xl shadow-2xl transform translate-y-full transition-transform duration-300 pointer-events-auto flex flex-col relative" id="modal-panel">
+            <div class="w-full flex justify-center pt-3 pb-1" onclick="closeModal()"><div class="w-12 h-1.5 bg-gray-200 rounded-full"></div></div>
+            <div class="flex-1 overflow-y-auto p-6 pt-2"><div id="modal-content"></div></div>
+            <div class="p-4 border-t border-gray-50 bg-white safe-area-bottom">
+                <button onclick="openMap()" class="w-full bg-[#2c2c2c] text-white py-3.5 rounded-xl font-bold tracking-wider flex items-center justify-center gap-2 active:scale-95 transition-transform">
+                    <i data-lucide="navigation" class="w-4 h-4"></i> 開啟 Google Maps 導航
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- JavaScript Logic -->
-    <script>
-        // --- 全域變數 ---
-        let activeTab = 'itinerary';
-        let activeDay = 0;
-        let checklist = JSON.parse(localStorage.getItem('trip_checks') || '{}');
-        let budgetItems = JSON.parse(localStorage.getItem('trip_budget') || '[]');
-        let batchItems = []; 
-        let exchangeRate = 0.22;
-        let currentModalText = ""; 
+    <!-- Modal: Big Card -->
+    <div id="big-card-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-white p-6 cursor-pointer big-card-modal" onclick="closeBigCard()">
+        <div class="text-center w-full">
+            <p class="text-xs text-stone-400 tracking-[0.3em] uppercase mb-10">Tap to Close</p>
+            <h2 id="big-card-jp" class="text-5xl font-bold text-stone-800 mb-6 leading-tight jp-font"></h2>
+            <p id="big-card-zh" class="text-xl text-stone-500 font-medium"></p>
+            <div class="mt-12 border-t border-stone-200 pt-8 inline-block">
+                <p class="text-sm font-bold text-stone-800 bg-white px-4 py-2 rounded-full shadow-sm">給店員看的放大字卡</p>
+            </div>
+        </div>
+    </div>
 
-        // --- 景點深度介紹資料庫 ---
-        const ATTRACTION_DETAILS = {
-            "飛驒古川 瀨戶川鯉魚": "飛驒古川（Hida Furukawa）是一個比高山更寧靜、更具生活感的古老小鎮，因動畫電影《你的名字》在此取景而聲名大噪。\n\n【必看亮點】\n1. 白壁土藏街與瀨戶川：這是古川最經典的畫面。沿著清澈的瀨戶川，排列著一整排白牆黑瓦的傳統倉庫（土藏）。川裡游著上千條色彩斑斕的錦鯉，您可以購買魚飼料餵食，感受悠閒的午後時光。\n\n2. 《你的名字》聖地巡禮：\n- 飛驒古川車站：電影中瀧尋找三葉時出現的車站場景，一定要在天橋上拍一張列車進站的畫面。\n- 飛驒市圖書館：瀧在此查閱關於糸守町的資料。\n- 氣多若宮神社：電影中宮水神社的原型之一。\n\n這裡沒有高山老街的擁擠喧囂，多了一份屬於飛驒山城的靜謐與優雅。",
-
-            "新穗高雙層纜車": "新穗高高空纜車（Shinhotaka Ropeway）是日本唯一的雙層纜車，帶您直達標高2156公尺的雲端世界，輕鬆飽覽北阿爾卑斯山的壯麗全景。\n\n【空中漫步體驗】\n纜車分為兩段，第一段從新穗高溫泉站到鍋平高原站，第二段則是著名的雙層纜車，直達西穗高口站。隨著纜車緩緩爬升，原本仰望的群山逐漸變為平視，最後將整個槍之岳、穗高連峰踩在腳下。\n\n【山頂展望台】\n西穗高口站頂樓的展望台榮獲《米其林綠色指南》二星評價。在這裡，您可以360度無死角地欣賞綿延的雪峰與雲海。如果在冬季或春初前往，還能體驗在比人還高的「雪之迴廊」中散步的樂趣。",
-
-            "雨晴海岸": "雨晴海岸（Amaharashi Coast）被選為「日本海濱百選」之一，位於富山縣高岡市。這裡擁有世界上極為罕見的奇景——「隔著海洋眺望3000公尺級的高山」。\n\n【絕景構圖】\n天氣晴朗時，您可以站在海邊，看著湛藍的富山灣，而海平面的對岸竟然矗立著終年積雪的立山連峰！前景著名的「女岩」與後方雄偉的雪山相互輝映，彷彿一幅潑墨山水畫。\n\n【義經岩傳說】\n海岸邊有一塊巨大的岩石叫做「義經岩」。傳說源義經在被哥哥源賴朝追殺逃亡至北陸時，曾在此岩石下躲避驟雨等待天晴，這也是「雨晴」地名的由來。",
-
-            "春之高山祭 (山王祭)": "春之高山祭（Spring Takayama Festival），又稱為山王祭，是日本三大美祭之一，每年固定於4月14日與15日舉行，宣告飛驒高山春天的來臨。\n\n【祭典看點】\n1. 華麗屋台：祭典的主角是12座被譽為「活動的陽明門」的屋台（花車）。這些屋台裝飾著精緻的飛驒木雕、漆器與金屬飾品，展現了江戶時代工匠的高超技藝。\n\n2. 機關人偶表演：其中幾座屋台上有精巧的「機關人偶（Karakuri）」，由多位操偶師在內部精密操控，人偶能做出變臉、寫字等高難度動作，栩栩如生，是必看重點！\n\n3. 夢幻夜祭：若天氣允許，14日晚上會舉行夜祭。每座屋台掛上約100盞燈籠，在漆黑的古老街道中巡遊，與白天華麗燦爛的氛圍截然不同，充滿了夢幻與神祕感。",
-            
-            "立山黑部雪之大谷": "立山黑部阿爾卑斯路線，是一條連接富山縣與長野縣的壯闊山岳觀光路線。為了保護自然環境，私家車禁止進入，旅客必須換乘多種獨特的交通工具才能橫越群山。這趟旅程您將體驗人類工程與大自然奇景的結合。\n\n【六種交通工具大解密】\n1. 立山登山纜車 (7分鐘)：從立山站一口氣爬升500公尺，進入山岳地帶。\n\n2. 立山高原巴士 (50分鐘)：行駛在雪壁之間，前往標高2450公尺的室堂，也就是著名的「雪之大谷」所在地。\n\n3. 立山隧道無軌電車 (10分鐘)：這是在日本海拔最高的隧道中行駛的電車，全程都在山洞裡。\n\n4. 立山架空索道 (7分鐘)：無支柱式纜車，像移動的展望台，可以360度俯瞰阿爾卑斯山脈全景。\n\n5. 黑部登山纜車 (5分鐘)：為了不破壞景觀，这是日本唯一全地下式的纜車。\n\n6. 關電隧道電氣巴士 (16分鐘)：穿越當年工程最艱鉅的破碎帶，最後抵達扇澤。",
-            
-            "名花之里 (Nabana no Sato)": "名花之里（Nabana no Sato）位於三重縣桑名市，以「日本最大規模的夜間燈飾」聞名於世。這裡的點燈活動不只是單純的掛掛燈泡，而是利用數百萬顆LED燈球，在大地上描繪出壯觀的圖畫。\n\n【必看亮點】\n1. 光之隧道：全長200公尺的光之迴廊，走在隧道中彷彿被溫暖的光芒包圍，是這裡最經典的打卡點。\n\n2. 主題燈飾區：每年會有不同的主題（如熊本熊、阿爾卑斯山的少女等），利用燈光在廣大的斜坡上演出動態的故事。\n\n3. 水上燈飾：利用寬廣的水面反射光影，創造出如同極光般夢幻的色彩變化。\n\n建議您傍晚入場，先欣賞白天的花園美景（如鬱金香），隨著夜幕低垂，見證燈光瞬間亮起的感動時刻。",
-            
-            "吉卜力公園 Ghibli Park": "吉卜力公園位於愛知縣，是將原本的「愛・地球博紀念公園」重新規劃，讓宮崎駿筆下的奇幻世界真實重現。這裡與一般主題樂園最大的不同是——沒有大型雲霄飛車，沒有人偶裝表演，主打「散步、發現、感受」。\n\n【主要區域】\n1. 吉卜力大倉庫：這是室內型的大展覽館，收藏了吉卜力作品的秘密。您可以在這裡與《神隱少女》的無臉男合照，或是看到《天空之城》巨大的機器人兵。\n\n2. 青春之丘：重現了《心之谷》中的古董店「地球屋」，站在高處可以俯瞰園區。\n\n3. Dondoko之森：以《龍貓》為主題，穿過森林步道後，會看到小月和小梅的家。\n\n這裡的每個角落都藏著細節，請放慢腳步，在森林與微風中尋找屬於您的童話回憶吧！"
-        };
-
-        // --- 資料數據 (更新美食與連結) ---
-        const itineraryData = [
-            { 
-                day: "Day 1", 
-                date: "4/11 (六)", 
-                location: "名古屋 Nagoya", 
-                lat: 35.18, lon: 136.90,
-                events: [ 
-                    { type: 'transport', title: '航班：CI 0154', detail: '07:30 台北(TPE) ➔ 11:20 名古屋(NGO)', booking: '訂位代號: FK3SJX' },
-                    { 
-                        type: 'transport', 
-                        title: '取車：日産レンタカー', 
-                        detail: '中部国際空港店 (Serena e-Power)', 
-                        booking: '<a href="https://www.tabirai.net/car/search/UserLogin.aspx?YNO=123098386" target="_blank" class="underline decoration-indigo-300 hover:text-indigo-600">預約號: 123098386 <i data-lucide="external-link" class="inline w-3 h-3"></i></a>', 
-                        tips: '密碼: 17f23cd8 / 總額: ¥148,632 (現場付)' 
-                    }, 
-                    { type: 'stay', title: 'Comfort Hotel Nagoya Shinkansenguchi', detail: '名古屋車站太閣通口', nav: 'Comfort Hotel Nagoya Shinkansenguchi', booking: 'CONF#80886535' }, 
-                    { type: 'food', title: '必吃：蓬萊軒 鰻魚飯三吃', detail: '名古屋必吃名店，建議提早抽號碼牌。', tips: '必點：Hitsumabushi', tabelog: 'https://tabelog.com/aichi/A2301/A230112/23000063/' },
-                    { type: 'food', title: '必吃：世界的山醬', detail: '夢幻手羽先，胡椒味重很下酒。', tips: '宵夜首選', tabelog: 'https://tabelog.com/aichi/A2301/A230103/23000084/' } 
-                ] 
-            },
-            { 
-                day: "Day 2", 
-                date: "4/12 (日)", 
-                location: "高山 Takayama", 
-                lat: 36.14, lon: 137.25,
-                events: [ 
-                    { type: 'transport', title: '自駕前往高山', detail: '路程約 160km / 2.5小時。', tips: '建議加購 CEP 高速公路 Pass' }, 
-                    { type: 'attraction', title: '飛驒古川 瀨戶川鯉魚', detail: '《你的名字》場景巡禮，白壁土藏街散策。', nav: '飛驒古川白壁土藏街' },
-                    { type: 'stay', title: 'hotel around TAKAYAMA', detail: 'Ascend Hotel Collection', booking: 'CONF#78677355', nav: 'hotel around TAKAYAMA' }, 
-                    { type: 'food', title: '推薦：味藏天國 (燒肉)', detail: 'JA農協直營，飛驒牛品質有保證。', tips: '熱門店需排隊', tabelog: 'https://tabelog.com/gifu/A2104/A210401/21000287/' },
-                    { type: 'food', title: '推薦：丸明 (燒肉)', detail: '高山老字號精肉店直營。', tips: 'CP值高', tabelog: 'https://tabelog.com/gifu/A2104/A210401/21000041/' } 
-                ] 
-            },
-            { 
-                day: "Day 3", 
-                date: "4/13 (一)", 
-                location: "奧飛驒 / 高山", 
-                lat: 36.22, lon: 137.52, 
-                events: [ 
-                    { type: 'attraction', title: '新穗高雙層纜車', detail: '標高 2156m 壯闊雪山景', nav: '新穗高纜車', highlight: '山上與山下溫差大，備厚外套' },
-                    { type: 'food', title: 'Center4 Hamburgers', detail: '超人氣飛驒牛漢堡，歐美客最愛。', tips: '店內裝潢很有特色', tabelog: 'https://tabelog.com/gifu/A2104/A210401/21008670/' }, 
-                    { type: 'stay', title: 'hotel around TAKAYAMA (續住)', detail: 'Ascend Hotel Collection', nav: 'hotel around TAKAYAMA' } 
-                ] 
-            },
-            { 
-                day: "Day 4", 
-                date: "4/14 (二)", 
-                location: "高山祭 (Day 1)", 
-                lat: 36.14, lon: 137.25,
-                events: [ 
-                    { type: 'attraction', title: '春之高山祭 (山王祭)', detail: '【全日】欣賞屋台遊行、機關人偶表演。', highlight: '重要：祭典期間市區交管，請步行前往' }, 
-                    { type: 'food', title: '小吃：坂口屋 (飛驒牛握壽司)', detail: '老街上的排隊名店，盛在仙貝上。', tabelog: 'https://tabelog.com/gifu/A2104/A210401/21000020/' },
-                    { type: 'stay', title: 'hotel around TAKAYAMA (續住)', detail: 'Ascend Hotel Collection', nav: 'hotel around TAKAYAMA' } 
-                ] 
-            },
-            { 
-                day: "Day 5", 
-                date: "4/15 (三)", 
-                location: "高山祭 ➔ 富山", 
-                lat: 36.69, lon: 137.21,
-                events: [ 
-                    { type: 'attraction', title: '春之高山祭 (Day 2)', detail: '繼續參與祭典活動至下午。' }, 
-                    { type: 'transport', title: '前往富山', detail: '約 17:00 出發，車程約 1.5 小時。' },
-                    { type: 'food', title: '必吃：白蝦亭 (白えび亭)', detail: '位於富山車站，富山灣寶石「白蝦天丼」。', tips: '車站內必吃', tabelog: 'https://tabelog.com/toyama/A1601/A160101/16000041/' },
-                    { type: 'stay', title: 'Comfort Hotel Toyama', detail: '富山車站旁', booking: 'CONF#80924504', nav: 'Comfort Hotel Toyama' } 
-                ] 
-            },
-            { 
-                day: "Day 6", 
-                date: "4/16 (四)", 
-                location: "立山黑部 (室堂)", 
-                lat: 36.57, lon: 137.60,
-                events: [ 
-                    { type: 'transport', title: '自駕至立山站', detail: '私家車終點，轉乘登山交通', nav: '立山站' }, 
-                    { type: 'attraction', title: '立山黑部雪之大谷', detail: '開山第二天！壯觀雪牆', highlight: '必做預約：立山登山纜車預約' }, 
-                    { type: 'food', title: '迴轉豐山壽司 (廻転とやま鮨)', detail: '富山車站旁人氣壽司，食材新鮮。', tips: '晚餐推薦', tabelog: 'https://tabelog.com/toyama/A1601/A160101/16007229/' },
-                    { type: 'stay', title: 'Comfort Hotel Toyama (續住)', detail: '富山車站旁', nav: 'Comfort Hotel Toyama' } 
-                ] 
-            },
-            { 
-                day: "Day 7", 
-                date: "4/17 (五)", 
-                location: "桑名市 (名花之里)", 
-                lat: 35.08, lon: 136.70, 
-                events: [ 
-                    { type: 'attraction', title: '雨晴海岸', detail: '隔著海眺望立山連峰 (建議上午前往)', nav: '雨晴海岸' },
-                    { type: 'transport', title: '開車南下', detail: '經東海北陸道回名古屋 (約3小時)' },
-                    { type: 'attraction', title: '名花之里 (Nabana no Sato)', detail: '日本最大規模夜間點燈', nav: '名花之里', highlight: '下午四點前入場可先看花園' }, 
-                    { type: 'food', title: '推薦：山本屋本店 (味噌烏龍麵)', detail: '名古屋名物，麵條口感偏硬有嚼勁。', tips: '回名古屋晚餐', tabelog: 'https://tabelog.com/aichi/A2301/A230103/23000122/' },
-                    { type: 'stay', title: 'Comfort Hotel Nagoya Fushimi', detail: '名古屋市區伏見站', booking: 'CONF#80924952', nav: 'Comfort Hotel Nagoya Fushimi' } 
-                ] 
-            },
-            { 
-                day: "Day 8", 
-                date: "4/18 (六)", 
-                location: "長久手 (吉卜力)", 
-                lat: 35.17, lon: 137.09,
-                events: [ 
-                    { type: 'attraction', title: '吉卜力公園 Ghibli Park', detail: '需預約，重現宮崎駿經典', nav: '吉卜力公園', highlight: '重要預約代號：GHP-2026-XXXX' }, 
-                    { type: 'food', title: '推薦：丸哈食堂 (まるは食堂)', detail: '中部機場或常滑有名的大炸蝦定食。', tips: '巨無霸炸蝦', tabelog: 'https://tabelog.com/aichi/A2304/A230402/23001853/' },
-                    { type: 'stay', title: 'Comfort Hotel Central Int Airport', detail: '機場分館', booking: 'CONF#80889756', nav: 'Comfort Hotel Central International Airport' } 
-                ] 
-            },
-            { 
-                day: "Day 9", 
-                date: "4/19 (日)", 
-                location: "中部國際機場", 
-                lat: 34.86, lon: 136.81,
-                events: [ 
-                    { type: 'shopping', title: '中部機場最後採買', tips: '必買：えびせん貝の里 蝦餅、赤福' }, 
-                    { type: 'food', title: '矢場頓 (機場店)', detail: '最後機會再吃一次味噌豬排。', tabelog: 'https://tabelog.com/aichi/A2304/A230402/23005511/' },
-                    { type: 'transport', title: '還車：日産レンタカー', detail: '中部国際空港店 (Tel: 0569-38-1123)', tips: '請保留最後一次加滿油的收據' },
-                    { type: 'transport', title: '航班：CI 0155', detail: '12:20 名古屋(NGO) ➔ 14:30 台北(TPE)', booking: '訂位代號: FK3SJX' }
-                ] 
-            }
-        ];
-
-        const TOOLS_DATA = {
-            checklist: [
-                { id: 'docs', name: '重要文件', color: 'text-orange-600', bg: 'bg-orange-100', items: [ { id: 'check_doc_passport', label: '護照 (檢查效期)' }, { id: 'check_doc_money', label: '日幣' }, { id: 'check_doc_vjw', label: '信用卡' }, { id: 'check_doc_ticket', label: '個人旅遊保險' } ] },
-                { id: 'tech', name: '3C 產品', color: 'text-blue-600', bg: 'bg-blue-100', items: [ { id: 'check_3c_phone', label: '網卡/漫遊' }, { id: 'check_3c_charge', label: '充電器/充電線' }, { id: 'check_3c_bank', label: '行動電源' } ] },
-                { id: 'personal', name: '個人/盥洗', color: 'text-green-600', bg: 'bg-green-100', items: [ { id: 'check_item_rain', label: '雨具/摺疊傘' }, { id: 'check_item_coat', label: '外套/保暖衣物' }, { id: 'check_item_wash', label: '牙刷/洗面乳' }, { id: 'check_item_meds', label: '個人常備藥' } ] }
-            ],
-            daily: [ { id: 'daily_charger', label: '充電器 / 轉接頭' }, { id: 'daily_wash', label: '盥洗包 / 眼鏡' }, { id: 'daily_wifi', label: '護照 / 隨身貴重物品' }, { id: 'daily_key', label: '房卡已歸還' } ],
-            jp: [
-                { jp: 'すみません', romaji: 'Sumimasen', zh: '不好意思' }, 
-                { jp: 'トイレはどこですか', romaji: 'Toire wa?', zh: '廁所在哪裡' },
-                { jp: '別々に包んでください', romaji: 'Betsu-betsu ni', zh: '請分開包裝' }, 
-                { jp: '免税になりますか', romaji: 'Tax Free?', zh: '可以免稅嗎?' },
-                { jp: '袋は要りません', romaji: 'No Bag', zh: '不用袋子' }, 
-                { jp: '新しいのはありますか', romaji: 'New one?', zh: '有新的嗎?' },
-                { jp: 'これをください', romaji: 'Kore o kudasai', zh: '我要這個' },
-                { jp: 'カードは使えますか', romaji: 'Card OK?', zh: '可以刷卡嗎?' },
-                { jp: 'メニューをください', romaji: 'Menu Please', zh: '請給我菜單' },
-                { jp: 'お水をください', romaji: 'Water Please', zh: '請給我水' }, 
-                { jp: 'おすすめは？', romaji: 'Recommend?', zh: '有推薦的嗎?' },
-                { jp: 'お会計をお願いします', romaji: 'Check Bill', zh: '麻煩結帳' }
+<script>
+    // ---------------------------------------------------------
+    // 1. DATA DEFINITIONS
+    // ---------------------------------------------------------
+    const TRIP_DATA = [
+        {
+            day: "Day 1", date: "4/11", weekday: "SAT", location: "名古屋",
+            lat: 35.18, lon: 136.90,
+            highlights: [
+                { time: "07:30", type: "FLIGHT", title: "CI 0154 台北 ➔ 名古屋", desc: "11:20 抵達中部國際機場 (NGO)", icon: "plane", booking: "訂位代號: FK3SJX" },
+                { 
+                    time: "12:00", type: "CAR", title: "取車：日產レンタカー", 
+                    desc: "中部國際機場店 / Serena e-Power", 
+                    address: "愛知県常滑市セントレア1-1", tel: "0569-38-1123", 
+                    booking: "預約號: 123098386", 
+                    link: "https://www.tabirai.net/car/search/UserLogin.aspx?YNO=123098386",
+                    tips: "密碼: 17f23cd8 / 現場付 ¥148,632", icon: "car" 
+                },
+                { 
+                    time: "13:30", type: "FOOD", title: "午餐：蓬萊軒", sub: "鰻魚飯三吃 (Hitsumabushi)", 
+                    address: "愛知県名古屋市熱田区神戸町503", tel: "052-671-8686",
+                    desc: "【百年老店的堅持】\n蓬萊軒是「鰻魚飯三吃」的發源地。他們的醬汁是代代相傳的「秘傳醬汁」。\n\n【三吃法教學】\n1. 第一碗：品嚐鰻魚與醬汁的原味。\n2. 第二碗：加入海苔、蔥花、山葵等佐料。\n3. 第三碗：淋上高湯做成茶泡飯。",
+                    menu: [ { name: "鰻魚飯三吃", jp: "ひつまぶし", price: "¥4,600" }, { name: "鰻魚玉子燒", jp: "うまき", price: "¥1,200" } ],
+                    speak: [{label:"我有預約", jp:"予約しています"}, {label:"有推薦的嗎", jp:"おすすめは？"}],
+                    tabelog: 'https://tabelog.com/aichi/A2301/A230112/23000063/'
+                },
+                { time: "15:30", type: "STAY", title: "Check-in: Comfort Hotel", desc: "Nagoya Shinkansenguchi", address: "愛知県名古屋市中村区則武1-13-7", tel: "052-453-3111", booking: "CONF#80886535", icon: "bed" },
+                { 
+                    time: "18:00", type: "FOOD", title: "晚餐：世界的山醬", sub: "夢幻手羽先", address: "名古屋駅周邊", 
+                    desc: "【名古屋的靈魂食物】\n名古屋當地的胡椒味更重、更香脆！靠著這道「夢幻雞翅」征服了全日本。",
+                    menu: [ { name: "夢幻雞翅 (5支)", jp: "幻の手羽先", price: "¥605" }, { name: "味噌炸豬排串", jp: "みそ串カツ", price: "¥495" } ],
+                    tabelog: 'https://tabelog.com/aichi/A2301/A230103/23000084/'
+                }
             ]
-        };
+        },
+        {
+            day: "Day 2", date: "4/12", weekday: "SUN", location: "高山",
+            lat: 36.14, lon: 137.25,
+            highlights: [
+                { time: "09:00", type: "DRIVE", title: "出發前往飛驒高山", desc: "經由東海北陸自動車道 (約2.5hr)", icon: "navigation", tips: "建議加購 CEP 高速公路 Pass" },
+                { 
+                    time: "12:00", type: "SIGHT", title: "飛驒古川", sub: "你的名字 聖地巡禮",
+                    address: "岐阜県飛騨市古川町", mapcode: "191 548 574*63",
+                    desc: "【比高山更靜謐的白壁土藏】\n如果您喜歡電影《你的名字》，這裡絕對是必訪聖地。瀧尋找三葉的車站、圖書館都在這裡。"
+                },
+                { 
+                    time: "17:00", type: "FOOD", title: "晚餐：味藏天國", sub: "JA農協直營 飛驒牛燒肉",
+                    address: "岐阜県高山市花里4-147", tel: "0577-37-1129",
+                    desc: "【絕對不會踩雷的飛驒牛】\n這家店是JA（日本農協）直營的，這意味著肉源絕對新鮮、品質由農協掛保證。",
+                    menu: [ { name: "味藏拼盤", jp: "味蔵盛り", price: "¥9,800" }, { name: "特上牛五花", jp: "特上カルビ", price: "¥2,480" } ],
+                    tabelog: 'https://tabelog.com/gifu/A2104/A210401/21000287/'
+                },
+                { time: "19:00", type: "STAY", title: "hotel around TAKAYAMA", desc: "Ascend Hotel Collection", address: "岐阜県高山市花岡町1-42-7", tel: "0577-32-5002", booking: "CONF#78677355", icon: "bed" }
+            ]
+        },
+        {
+            day: "Day 3", date: "4/13", weekday: "MON", location: "奧飛驒",
+            lat: 36.22, lon: 137.52,
+            highlights: [
+                { 
+                    time: "09:30", type: "SIGHT", title: "新穗高雙層纜車", sub: "標高2156m 雲上市界",
+                    address: "岐阜県高山市奥飛騨温泉郷新穂高", tel: "0578-89-2252",
+                    desc: "【米其林二星絕景】\n這是日本唯一的雙層纜車！山頂的展望台可以看到槍之岳、穗高連峰的 360 度全景。"
+                },
+                { 
+                    time: "13:00", type: "FOOD", title: "午餐：Center4 Hamburgers", sub: "歐美客最愛 飛驒牛漢堡",
+                    address: "岐阜県高山市上一之町94", tel: "0577-36-4527",
+                    desc: "【藏在古民家裡的漢堡店】\n推開門是濃濃的美式復古風。這裡的飛驒牛漢堡排多汁厚實，咬下去肉汁會噴發。",
+                    menu: [ { name: "飛驒牛漢堡", jp: "飛騨牛バーガー", price: "¥2,850" }, { name: "酪梨起司漢堡", jp: "アボカドチーズ", price: "¥1,450" } ],
+                    tabelog: 'https://tabelog.com/gifu/A2104/A210401/21008670/'
+                },
+                { time: "18:00", type: "STAY", title: "hotel around TAKAYAMA", desc: "續住", booking: "CONF#78677355", icon: "bed" }
+            ]
+        },
+        {
+            day: "Day 4", date: "4/14", weekday: "TUE", location: "高山祭",
+            lat: 36.14, lon: 137.25,
+            highlights: [
+                { 
+                    time: "All Day", type: "SIGHT", title: "春之高山祭 (山王祭)", sub: "日本三大美祭",
+                    address: "岐阜県高山市 日枝神社周邊", 
+                    desc: "【活動的陽明門】\n高山祭的主角是 12 座裝飾華麗的「屋台（花車）」。"
+                },
+                { 
+                    time: "12:00", type: "FOOD", title: "小吃：坂口屋", sub: "飛驒牛握壽司",
+                    address: "岐阜県高山市上三之町90",
+                    desc: "【老街散步美食】\n他們的飛驒牛握壽司不是放在盤子上，而是放在一片「仙貝」上。",
+                    menu: [ { name: "飛驒牛握壽司(2貫)", jp: "飛騨牛にぎり寿司", price: "¥800" } ],
+                    tabelog: 'https://tabelog.com/gifu/A2104/A210401/21000020/'
+                },
+                { time: "18:00", type: "STAY", title: "hotel around TAKAYAMA", desc: "續住", booking: "CONF#78677355", icon: "bed" }
+            ]
+        },
+        {
+            day: "Day 5", date: "4/15", weekday: "WED", location: "富山",
+            lat: 36.69, lon: 137.21,
+            highlights: [
+                { time: "AM", type: "SIGHT", title: "高山祭 (Day 2)", desc: "把握最後機會欣賞屋台巡遊", icon: "flag" },
+                { time: "17:00", type: "DRIVE", title: "前往富山", desc: "車程約 1.5 小時", icon: "car" },
+                { 
+                    time: "19:00", type: "FOOD", title: "晚餐：白えび亭 (白蝦亭)", sub: "富山灣的寶石",
+                    address: "富山県富山市明輪町1-220 (富山站內)", tel: "076-433-0355",
+                    desc: "【富山灣的寶石】\n白蝦亭位於富山車站旁，最出名的就是「白蝦天丼」。",
+                    menu: [ { name: "白蝦天丼", jp: "白えび天丼", price: "¥1,680" }, { name: "白蝦刺身丼", jp: "白えび刺身丼", price: "¥2,980" } ],
+                    tabelog: 'https://tabelog.com/toyama/A1601/A160101/16000041/'
+                },
+                { time: "20:00", type: "STAY", title: "Comfort Hotel Toyama", desc: "Toyama Station", address: "富山県富山市宝町1-3-2", tel: "076-433-3111", booking: "CONF#80924504", icon: "bed" }
+            ]
+        },
+        {
+            day: "Day 6", date: "4/16", weekday: "THU", location: "立山黑部",
+            lat: 36.57, lon: 137.60,
+            highlights: [
+                { 
+                    time: "07:00", type: "SIGHT", title: "立山黑部 雪之大谷", sub: "開山初期限定絕景",
+                    address: "立山駅 (車停此處)", mapcode: "669 222 537*11",
+                    desc: "【六種交通工具的接力賽】\n為了保護環境，私家車只能停在山下的「立山站」。接下來您將換乘纜車、高原巴士、無軌電車等 6 種交通工具。"
+                },
+                { 
+                    time: "18:00", type: "FOOD", title: "晚餐：廻転とやま鮨", sub: "富山灣直送",
+                    address: "富山県富山市桜町1-4-10", tel: "076-431-5448",
+                    desc: "【迴轉壽司的頂點】\n必點富山三寶：白蝦、螢光烏賊、鰤魚（Buri）。",
+                    menu: [ { name: "富山灣三種盛", jp: "富山湾三種盛り", price: "¥680" }, { name: "螢光烏賊", jp: "ホタルイカ", price: "¥380" } ],
+                    tabelog: 'https://tabelog.com/toyama/A1601/A160101/16007229/'
+                },
+                { time: "20:00", type: "STAY", title: "Comfort Hotel Toyama", desc: "續住", booking: "CONF#80924504", icon: "bed" }
+            ]
+        },
+        {
+            day: "Day 7", date: "4/17", weekday: "FRI", location: "三重",
+            lat: 35.08, lon: 136.70,
+            highlights: [
+                { 
+                    time: "09:00", type: "SIGHT", title: "雨晴海岸", sub: "海越立山絕景",
+                    address: "富山県高岡市太田", mapcode: "128 393 254*55",
+                    desc: "【世界級奇景】\n這是世界上少數可以「隔著大海眺望3000公尺級雪山」的地方。"
+                },
+                { time: "14:00", type: "DRIVE", title: "南下前往名古屋/三重", desc: "車程約 3 小時", icon: "car" },
+                { 
+                    time: "17:30", type: "SIGHT", title: "名花之里", sub: "日本最大燈海",
+                    address: "三重県桑名市長島町駒江漆畑270", tel: "0594-41-0787",
+                    desc: "【地上的銀河】\n這裡連續多年被評為日本必看的夜間燈飾第一名。最著名的是全長200公尺的「光之隧道」。"
+                },
+                { 
+                    time: "19:00", type: "FOOD", title: "晚餐：山本屋本店", sub: "味噌烏龍麵",
+                    address: "愛知県名古屋市中村区名駅3-12-19", tel: "052-565-0278",
+                    desc: "【超硬派！名古屋名物】\n使用粗硬的生麵直接放入味噌高湯燉煮，口感極具嚼勁。",
+                    menu: [ { name: "味噌烏龍麵", jp: "味噌煮込みうどん", price: "¥1,200" } ],
+                    tabelog: 'https://tabelog.com/aichi/A2301/A230103/23000122/'
+                },
+                { time: "21:00", type: "STAY", title: "Comfort Hotel Nagoya Fushimi", desc: "伏見站", address: "愛知県名古屋市中区錦2-19-14", tel: "052-201-3111", booking: "CONF#80924952", icon: "bed" }
+            ]
+        },
+        {
+            day: "Day 8", date: "4/18", weekday: "SAT", location: "愛知",
+            lat: 35.17, lon: 137.09,
+            highlights: [
+                { 
+                    time: "10:00", type: "SIGHT", title: "吉卜力公園", sub: "宮崎駿的夢幻世界",
+                    address: "愛知県長久手市茨ケ廻間乙1533-1", 
+                    desc: "【真的走進電影裡】\n這裡不是一般的遊樂園，沒有雲霄飛車，只有滿滿的細節。",
+                    tips: "預約號: GHP-2026-XXXX"
+                },
+                { 
+                    time: "17:00", type: "FOOD", title: "晚餐：丸哈食堂 (まるは食堂)", sub: "特大炸蝦",
+                    address: "中部國際機場內 / 或常滑本店",
+                    desc: "【愛知縣民的愛】\n這家食堂以「巨無霸炸蝦」聞名，蝦肉緊實彈牙，外皮酥脆不油膩。",
+                    menu: [ { name: "特大炸蝦定食", jp: "エビフライ定食", price: "¥2,200" } ],
+                    tabelog: 'https://tabelog.com/aichi/A2304/A230402/23001853/'
+                },
+                { time: "20:00", type: "STAY", title: "Comfort Hotel Central Int Airport", desc: "機場島內", address: "愛知県常滑市セントレア4-2-3", tel: "0569-38-7211", booking: "CONF#80889756", icon: "bed" }
+            ]
+        },
+        {
+            day: "Day 9", date: "4/19", weekday: "SUN", location: "返台",
+            lat: 34.86, lon: 136.81,
+            highlights: [
+                { 
+                    time: "09:00", type: "SHOP", title: "最後採買：機場免稅店", sub: "蝦餅 / 赤福",
+                    desc: "【必買伴手禮】\n1. 蝦餅之里 (えびせんべいの里)\n2. 赤福 (Akafuku)"
+                },
+                { time: "10:00", type: "CAR", title: "還車：日產レンタカー", desc: "中部國際機場店", tips: "請加滿油並保留收據", icon: "corner-up-left" },
+                { time: "12:20", type: "FLIGHT", title: "CI 0155 名古屋 ➔ 台北", desc: "14:30 抵達桃園 (TPE)", icon: "plane", booking: "訂位代號: FK3SJX" }
+            ]
+        }
+    ];
 
-        // --- 初始化 ---
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchRate();
-            fetchLocalWeather();
-            renderApp();
-            lucide.createIcons();
+    const TOOLS_DATA = {
+        checklist: [
+            { id: 'docs', name: '重要文件', color: 'bg-[#e3dcd2] text-[#8c7b6c]', items: [ { id: 'check_doc_passport', label: '護照' }, { id: 'check_doc_money', label: '日幣現金' }, { id: 'check_doc_vjw', label: '信用卡' }, { id: 'check_doc_ticket', label: '保險單' } ] },
+            { id: 'tech', name: '3C 產品', color: 'bg-[#d6e0e2] text-[#5c7a80]', items: [ { id: 'check_3c_phone', label: '網卡/漫遊' }, { id: 'check_3c_charge', label: '充電線' }, { id: 'check_3c_bank', label: '行動電源' } ] },
+            { id: 'personal', name: '個人/盥洗', color: 'bg-[#dbe4d5] text-[#6b8063]', items: [ { id: 'check_item_rain', label: '雨具' }, { id: 'check_item_coat', label: '保暖衣物' }, { id: 'check_item_wash', label: '牙刷/洗面乳' }, { id: 'check_item_meds', label: '常備藥' } ] }
+        ],
+        daily: [ { id: 'daily_charger', label: '充電器 / 轉接頭' }, { id: 'daily_wash', label: '盥洗包 / 眼鏡' }, { id: 'daily_wifi', label: '護照 / 隨身貴重物品' }, { id: 'daily_key', label: '房卡已歸還' } ],
+        jp: [
+            { jp: 'すみません', romaji: 'Sumimasen', zh: '不好意思' }, { jp: 'トイレはどこですか', romaji: 'Toire wa?', zh: '廁所在哪裡' },
+            { jp: '別々に包んでください', romaji: 'Betsu-betsu ni', zh: '請分開包裝' }, { jp: '免税になりますか', romaji: 'Tax Free?', zh: '可以免稅嗎?' },
+            { jp: '袋は要りません', romaji: 'No Bag', zh: '不用袋子' }, { jp: '新しいのはありますか', romaji: 'New one?', zh: '有新的嗎?' },
+            { jp: 'これをください', romaji: 'Kore o kudasai', zh: '我要這個' }, { jp: 'カードは使えますか', romaji: 'Card OK?', zh: '可以刷卡嗎?' },
+            { jp: 'メニューをください', romaji: 'Menu Please', zh: '請給我菜單' }, { jp: 'お水をください', romaji: 'Water Please', zh: '請給我水' }, 
+            { jp: 'おすすめは？', romaji: 'Recommend?', zh: '有推薦的嗎?' }, { jp: 'お会計をお願いします', romaji: 'Check Bill', zh: '麻煩結帳' }
+        ]
+    };
+
+    const ATTRACTION_DETAILS = {
+        "春之高山祭 (山王祭)": "春之高山祭（Spring Takayama Festival），又稱為山王祭，是日本三大美祭之一，每年固定於4月14日與15日舉行，宣告飛驒高山春天的來臨。\n\n【祭典看點】\n1. 華麗屋台：祭典的主角是12座被譽為「活動的陽明門」的屋台（花車）。這些屋台裝飾著精緻的飛驒木雕、漆器與金屬飾品，展現了江戶時代工匠的高超技藝。\n\n2. 機關人偶表演：其中幾座屋台上有精巧的「機關人偶（Karakuri）」，由多位操偶師在內部精密操控，人偶能做出變臉、寫字等高難度動作，栩栩如生，是必看重點！\n\n3. 夢幻夜祭：若天氣允許，14日晚上會舉行夜祭。每座屋台掛上約100盞燈籠，在漆黑的古老街道中巡遊，與白天華麗燦爛的氛圍截然不同，充滿了夢幻與神祕感。",
+        "立山黑部雪之大谷": "立山黑部阿爾卑斯路線，是一條連接富山縣與長野縣的壯闊山岳觀光路線。為了保護自然環境，私家車禁止進入，旅客必須換乘多種獨特的交通工具才能橫越群山。這趟旅程您將體驗人類工程與大自然奇景的結合。\n\n【六種交通工具大解密】\n1. 立山登山纜車 (7分鐘)：從立山站一口氣爬升500公尺，進入山岳地帶。\n\n2. 立山高原巴士 (50分鐘)：行駛在雪壁之間，前往標高2450公尺的室堂，也就是著名的「雪之大谷」所在地。\n\n3. 立山隧道無軌電車 (10分鐘)：這是在日本海拔最高的隧道中行駛的電車，全程都在山洞裡。\n\n4. 立山架空索道 (7分鐘)：無支柱式纜車，像移動的展望台，可以360度俯瞰阿爾卑斯山脈全景。\n\n5. 黑部登山纜車 (5分鐘)：為了不破壞景觀，这是日本唯一全地下式的纜車。\n\n6. 關電隧道電氣巴士 (16分鐘)：穿越當年工程最艱鉅的破碎帶，最後抵達扇澤。",
+        "名花之里 (Nabana no Sato)": "名花之里（Nabana no Sato）位於三重縣桑名市，以「日本最大規模的夜間燈飾」聞名於世。這裡的點燈活動不只是單純的掛掛燈泡，而是利用數百萬顆LED燈球，在大地上描繪出壯觀的圖畫。\n\n【必看亮點】\n1. 光之隧道：全長200公尺的光之迴廊，走在隧道中彷彿被溫暖的光芒包圍，是這裡最經典的打卡點。\n\n2. 主題燈飾區：每年會有不同的主題（如熊本熊、阿爾卑斯山的少女等），利用燈光在廣大的斜坡上演出動態的故事。\n\n3. 水上燈飾：利用寬廣的水面反射光影，創造出如同極光般夢幻的色彩變化。\n\n建議您傍晚入場，先欣賞白天的花園美景（如鬱金香），隨著夜幕低垂，見證燈光瞬間亮起的感動時刻。",
+        "吉卜力公園 Ghibli Park": "吉卜力公園位於愛知縣，是將原本的「愛・地球博紀念公園」重新規劃，讓宮崎駿筆下的奇幻世界真實重現。這裡與一般主題樂園最大的不同是——沒有大型雲霄飛車，沒有人偶裝表演，主打「散步、發現、感受」。\n\n【主要區域】\n1. 吉卜力大倉庫：這是室內型的大展覽館，收藏了吉卜力作品的秘密。您可以在這裡與《神隱少女》的無臉男合照，或是看到《天空之城》巨大的機器人兵。\n\n2. 青春之丘：重現了《心之谷》中的古董店「地球屋」，站在高處可以俯瞰園區。\n\n3. Dondoko之森：以《龍貓》為主題，穿過森林步道後，會看到小月和小梅的家。\n\n這裡的每個角落都藏著細節，請放慢腳步，在森林與微風中尋找屬於您的童話回憶吧！",
+        "飛驒古川 瀨戶川鯉魚": "飛驒古川（Hida Furukawa）是一個比高山更寧靜、更具生活感的古老小鎮，因動畫電影《你的名字》在此取景而聲名大噪。\n\n【必看亮點】\n1. 白壁土藏街與瀨戶川：這是古川最經典的畫面。沿著清澈的瀨戶川，排列著一整排白牆黑瓦的傳統倉庫（土藏）。川裡游著上千條色彩斑斕的錦鯉，您可以購買魚飼料餵食，感受悠閒的午後時光。\n\n2. 《你的名字》聖地巡禮：\n- 飛驒古川車站：電影中瀧尋找三葉時出現的車站場景，一定要在天橋上拍一張列車進站的畫面。\n- 飛驒市圖書館：瀧在此查閱關於糸守町的資料。\n- 氣多若宮神社：電影中宮水神社的原型之一。\n\n這裡沒有高山老街的擁擠喧囂，多了一份屬於飛驒山城的靜謐與優雅。",
+        "新穗高雙層纜車": "新穗高高空纜車（Shinhotaka Ropeway）是日本唯一的雙層纜車，帶您直達標高2156公尺的雲端世界，輕鬆飽覽北阿爾卑斯山的壯麗全景。\n\n【空中漫步體驗】\n纜車分為兩段，第一段從新穗高溫泉站到鍋平高原站，第二段則是著名的雙層纜車，直達西穗高口站。隨著纜車緩緩爬升，原本仰望的群山逐漸變為平視，最後將整個槍之岳、穗高連峰踩在腳下。\n\n【山頂展望台】\n西穗高口站頂樓的展望台榮獲《米其林綠色指南》二星評價。在這裡，您可以360度無死角地欣賞綿延的雪峰與雲海。如果在冬季或春初前往，還能體驗在比人還高的「雪之迴廊」中散步的樂趣。",
+        "雨晴海岸": "雨晴海岸（Amaharashi Coast）被選為「日本海濱百選」之一，位於富山縣高岡市。這裡擁有世界上極為罕見的奇景——「隔著海洋眺望3000公尺級的高山」。\n\n【絕景構圖】\n天氣晴朗時，您可以站在海邊，看著湛藍的富山灣，而海平面的對岸竟然矗立著終年積雪的立山連峰！前景著名的「女岩」與後方雄偉的雪山相互輝映，彷彿一幅潑墨山水畫。\n\n【義經岩傳說】\n海岸邊有一塊巨大的岩石叫做「義經岩」。傳說源義經在被哥哥源賴朝追殺逃亡至北陸時，曾在此岩石下躲避驟雨等待天晴，這也是「雨晴」地名的由來。"
+    };
+
+    // ---------------------------------------------------------
+    // 2. HELPER FUNCTIONS
+    // ---------------------------------------------------------
+    function initDynamicPadding() {
+        const header = document.getElementById('header');
+        const main = document.getElementById('main-container');
+        if(header && main) {
+            const h = header.offsetHeight;
+            main.style.paddingTop = (h + 20) + 'px';
+        }
+    }
+    
+    // Switch UI - Moved here to ensure it's defined
+    function switchTab(tabName) {
+        if(tabName === 'itinerary') renderItinerary();
+        else if(tabName === 'hotels') renderHotels();
+        else if(tabName === 'drive') renderDrive();
+        else if(tabName === 'tools') renderTools();
+        
+        ['itinerary', 'hotels', 'drive', 'tools'].forEach(t => {
+            const btn = document.getElementById('nav-'+t);
+            if(t === tabName) btn.classList.add('active');
+            else btn.classList.remove('active');
         });
-
-        function fetchRate() {
-            // 使用免費公開 API 獲取匯率 (不需 Key)
-            fetch('https://api.exchangerate-api.com/v4/latest/JPY')
-                .then(res => res.json())
-                .then(data => { if(data.rates.TWD) exchangeRate = data.rates.TWD; })
-                .catch(e => console.log('Rate fetch error', e));
+        
+        // Hide/Show Date Selector
+        const daySelector = document.getElementById('day-selector');
+        if (tabName === 'itinerary') {
+            daySelector.classList.remove('hidden');
+            daySelector.classList.add('flex');
+            document.getElementById('header').classList.add('pb-2');
+            document.getElementById('header').classList.remove('pb-6');
+        } else {
+            daySelector.classList.add('hidden');
+            daySelector.classList.remove('flex');
+            document.getElementById('header').classList.remove('pb-2');
+            document.getElementById('header').classList.add('pb-6');
         }
 
-        // --- 氣象功能 ---
-        function fetchLocalWeather() {
-            const tempEl = document.getElementById('local-temp');
-            if (navigator.geolocation) {
-                // 顯示 loading 狀態
-                tempEl.innerText = '...';
-                
-                navigator.geolocation.getCurrentPosition(
-                    async (position) => {
-                        try {
-                            const lat = position.coords.latitude;
-                            const lon = position.coords.longitude;
-                            const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m&timezone=auto`);
-                            const data = await res.json();
-                            if (data.current) {
-                                tempEl.innerText = `${Math.round(data.current.temperature_2m)}°C`;
-                            }
-                        } catch (e) { 
-                            console.warn("Local weather error", e); 
-                            tempEl.innerText = 'N/A';
-                        }
-                    },
-                    (error) => {
-                        console.log("Geolocation denied or timeout."); 
-                        tempEl.innerText = '未定位'; // Not located
-                    }
-                );
-            } else {
-                tempEl.innerText = 'N/A';
-            }
-        }
+        window.scrollTo(0,0);
+    }
+    
+    function getIcon(t) { 
+        if(t==='FLIGHT') return 'plane'; 
+        if(t==='CAR'||t==='DRIVE') return 'car'; 
+        if(t==='FOOD') return 'utensils'; 
+        if(t==='STAY') return 'bed-double'; 
+        if(t==='SHOP') return 'shopping-bag'; 
+        return 'map-pin'; 
+    }
 
-        async function fetchDayWeather(idx) {
-            const day = itineraryData[idx];
-            if (!day.lat || !day.lon) return;
+    function getIntVal(id, def = 1) {
+        const el = document.getElementById(id);
+        const val = el ? el.value : null;
+        return val ? parseInt(val) : def;
+    }
 
-            // 檢查 DOM 元素是否存在
-            const statContainer = document.getElementById(`weather-stats-${idx}`);
-            if (!statContainer) return; // 如果找不到元素，直接返回
-
+    // --- Weather Helpers ---
+    async function fetchDayWeather(day) {
+        const el = document.getElementById('day-weather');
+        if(!el) return;
+        try {
+            const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${day.lat}&longitude=${day.lon}&daily=precipitation_probability_max,temperature_2m_max,temperature_2m_min,uv_index_max,weather_code&timezone=Asia%2FTokyo&forecast_days=1`);
+            const d = await res.json();
+            
+            let aqi = '-';
             try {
-                // Open-Meteo API Fetch
-                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${day.lat}&longitude=${day.lon}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,uv_index_max&timezone=Asia%2FTokyo&forecast_days=1`);
-                const data = await res.json();
-                
-                // AQI Fetch
-                let aqi = '-';
-                try {
-                    const aqiRes = await fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${day.lat}&longitude=${day.lon}&daily=us_aqi_max&timezone=Asia%2FTokyo&forecast_days=1`);
-                    const aqiData = await aqiRes.json();
-                    if(aqiData.daily && aqiData.daily.us_aqi_max) aqi = aqiData.daily.us_aqi_max[0];
-                } catch(e) {}
+                const aqiRes = await fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${day.lat}&longitude=${day.lon}&daily=us_aqi_max&timezone=Asia%2FTokyo&forecast_days=1`);
+                const aqiData = await aqiRes.json();
+                if(aqiData.daily && aqiData.daily.us_aqi_max) aqi = aqiData.daily.us_aqi_max[0];
+            } catch(e){}
 
-                if (data.daily) {
-                    const max = Math.round(data.daily.temperature_2m_max[0]);
-                    const min = Math.round(data.daily.temperature_2m_min[0]);
-                    const rain = data.daily.precipitation_probability_max[0];
-                    const uv = data.daily.uv_index_max[0];
-                    const code = data.daily.weather_code[0];
+            if(d.daily) {
+                const max = Math.round(d.daily.temperature_2m_max[0]);
+                const min = Math.round(d.daily.temperature_2m_min[0]);
+                const rain = d.daily.precipitation_probability_max[0];
+                const code = d.daily.weather_code[0];
 
-                    // Weather Icon Logic
-                    let iconHtml = '<i data-lucide="sun" class="w-8 h-8 text-orange-400"></i>';
-                    if (code > 3) iconHtml = '<i data-lucide="cloud" class="w-8 h-8 text-gray-400"></i>';
-                    if (code >= 51) iconHtml = '<i data-lucide="cloud-rain" class="w-8 h-8 text-blue-400"></i>';
-                    if (code >= 71) iconHtml = '<i data-lucide="snowflake" class="w-8 h-8 text-blue-200"></i>';
+                let wIcon = '<i data-lucide="sun" class="w-8 h-8 text-orange-400"></i>';
+                if(code>3) wIcon = '<i data-lucide="cloud" class="w-8 h-8 text-stone-400"></i>';
+                if(code>=51) wIcon = '<i data-lucide="cloud-rain" class="w-8 h-8 text-blue-400"></i>';
 
-                    // Update UI
-                    statContainer.innerHTML = `
-                        <div class="flex items-center justify-between bg-white/50 p-3 rounded-xl border border-stone-100">
-                            <div>
-                                <div class="flex items-end gap-2">
-                                    <span class="text-3xl font-bold text-stone-800">${max}°</span>
-                                    <span class="text-sm text-stone-500 mb-1">/ ${min}°</span>
-                                </div>
-                                <div class="flex gap-2 mt-1">
-                                    <span class="weather-stat-box text-blue-600"><i data-lucide="umbrella" class="w-3 h-3"></i> ${rain}%</span>
-                                    <span class="weather-stat-box text-orange-600"><i data-lucide="sun" class="w-3 h-3"></i> UV ${uv}</span>
-                                    <span class="weather-stat-box text-green-600"><i data-lucide="wind" class="w-3 h-3"></i> AQI ${aqi}</span>
-                                </div>
+                el.innerHTML = `
+                    <div class="flex items-center justify-end gap-3">
+                        <div class="text-right">
+                            <div class="text-xl font-bold text-stone-800 leading-none">${max}° <span class="text-sm text-stone-400 font-normal">/ ${min}°</span></div>
+                            <div class="flex items-center justify-end gap-2 mt-1 text-[10px] text-stone-500">
+                                <span><i data-lucide="umbrella" class="w-3 h-3 inline"></i> ${rain}%</span>
+                                <span>AQI ${aqi}</span>
                             </div>
-                            <div>${iconHtml}</div>
                         </div>
-                        <p class="text-[10px] text-center text-stone-400 mt-1">顯示當地近日氣象 (僅供參考)</p>
-                    `;
-                    lucide.createIcons(); // Re-render icons
-                }
-            } catch (e) {
-                console.error("Weather fetch error", e);
-                statContainer.innerHTML = '<div class="text-xs text-stone-400">暫無法取得氣象資訊</div>';
+                        ${wIcon}
+                    </div>
+                `;
+                lucide.createIcons();
             }
+        } catch(e) {
+            el.innerHTML = '<span class="text-xs text-stone-300">Weather Unavailable</span>';
         }
-
-        // --- 核心渲染邏輯 ---
-        function renderApp() {
-            renderHeader();
-            renderContent();
-            renderNav();
-            lucide.createIcons();
+    }
+    
+    function fetchLocalWeather() {
+        const tempEl = document.getElementById('local-temp');
+        if(!tempEl) return;
+        if(navigator.geolocation) {
+            tempEl.innerText = '...';
+            navigator.geolocation.getCurrentPosition(async p => {
+                try {
+                    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${p.coords.latitude}&longitude=${p.coords.longitude}&current=temperature_2m&timezone=auto`);
+                    const d = await res.json();
+                    if(d.current) tempEl.innerText = Math.round(d.current.temperature_2m) + '°';
+                } catch(e) { tempEl.innerText = '--'; }
+            }, () => tempEl.innerText = '--');
         }
+    }
 
-        function switchTab(tab) {
-            activeTab = tab;
-            renderApp();
-            window.scrollTo(0, 0);
+    // --- Currency Logic ---
+    let currentRate = 0.22;
+    async function fetchRate() {
+        try {
+            const res = await fetch('https://api.exchangerate-api.com/v4/latest/JPY');
+            const data = await res.json();
+            if(data.rates.TWD) {
+                currentRate = data.rates.TWD;
+                // Only try to update UI if element exists (Tools tab is active)
+                const rateDisplay = document.getElementById('calc-rate-display');
+                if(rateDisplay) {
+                    rateDisplay.innerText = currentRate.toFixed(3);
+                    renderBudget();
+                    convertCurrency();
+                }
+            }
+        } catch(e){ console.log("Rate Fetch Error", e); }
+    }
+    
+    function convertCurrency() {
+        const jpyInput = document.getElementById('jpy-input');
+        const twdOutput = document.getElementById('twd-output');
+        if(jpyInput && twdOutput) {
+            const val = jpyInput.value;
+            twdOutput.innerText = val ? Math.round(val * currentRate).toLocaleString() : 0;
         }
+    }
 
-        function switchDay(idx) {
-            activeDay = idx;
-            renderApp();
+    // --- Budget / Batch Logic ---
+    let budgetItems = JSON.parse(localStorage.getItem('trip_budget') || '[]');
+    let batchItems = []; 
+
+    function renderBudget() {
+        const list = document.getElementById('budget-list');
+        if(!list) return; // Exit if tools tab not active
+        
+        list.innerHTML = ''; 
+        let total = 0;
+        budgetItems.forEach((item, index) => {
+            const qty = item.qty || 1;
+            const rowTotal = item.price * qty;
+            total += rowTotal;
+            list.innerHTML += `<li class="flex justify-between items-center border-b border-gray-50 dark:border-gray-700 pb-1">
+                <span class="text-gray-600 dark:text-gray-300">${item.name} <span class="text-xs text-gray-400">x${qty}</span></span>
+                <div class="flex items-center gap-2">
+                    <span class="font-medium text-gray-800 dark:text-gray-200">¥${rowTotal.toLocaleString()}</span>
+                    <button onclick="deleteItem(${index})" class="text-gray-300 hover:text-red-400"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
+                </div>
+            </li>`;
+        });
+        
+        const totalJpy = document.getElementById('total-jpy');
+        const totalTwd = document.getElementById('total-twd');
+        if(totalJpy) totalJpy.innerText = '¥' + total.toLocaleString();
+        if(totalTwd) totalTwd.innerText = '≈ NT$ ' + Math.round(total * currentRate).toLocaleString();
+        
+        try { localStorage.setItem('trip_budget', JSON.stringify(budgetItems)); } catch(e) {}
+        lucide.createIcons();
+    }
+
+    function addItem() {
+        const name = document.getElementById('budget-name').value;
+        const price = parseInt(document.getElementById('budget-price').value);
+        const qty = getIntVal('budget-qty', 1);
+        if (name && price) { 
+            budgetItems.push({ name, price, qty }); 
+            document.getElementById('budget-name').value = ''; 
+            document.getElementById('budget-price').value = ''; 
+            document.getElementById('budget-qty').value = '1'; 
+            renderBudget(); 
         }
+    }
+    
+    function deleteItem(idx) { budgetItems.splice(idx, 1); renderBudget(); }
+    function resetBudget() { if(confirm('清空記帳？')) { budgetItems = []; renderBudget(); } }
 
-        // --- 渲染 Header ---
-        function renderHeader() {
-            const container = document.getElementById('day-selector-container');
-            if (activeTab === 'itinerary') {
-                container.classList.remove('hidden');
-                container.innerHTML = itineraryData.map((d, idx) => `
-                    <button onclick="switchDay(${idx})" 
-                        class="flex-shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${activeDay === idx ? 'bg-stone-800 text-white shadow-md' : 'bg-white text-stone-500 border border-stone-200'}">
-                        ${d.day}
-                    </button>
-                `).join('');
+    // Batch specific
+    function addBatchItem() {
+        const name = document.getElementById('batch-name').value;
+        const price = parseInt(document.getElementById('batch-price').value);
+        const qty = getIntVal('batch-qty', 1);
+        if(name && price) {
+            batchItems.push({name, price, qty});
+            document.getElementById('batch-name').value = '';
+            document.getElementById('batch-price').value = '';
+            document.getElementById('batch-qty').value = '1';
+            renderBatch();
+        }
+    }
+    
+    function renderBatch() {
+        const list = document.getElementById('batch-list');
+        if(!list) return;
+        
+        const total = batchItems.reduce((a, b) => a + (b.price * b.qty), 0);
+        list.classList.remove('hidden');
+        list.innerHTML = batchItems.map((i, idx) => `
+            <div class="flex justify-between text-xs text-stone-600 mb-1 border-b border-stone-100 pb-1">
+                <span>${i.name} x${i.qty}</span>
+                <div class="flex gap-2"><span>¥${(i.price*i.qty).toLocaleString()}</span><button onclick="delBatch(${idx})" class="text-red-400">×</button></div>
+            </div>`).join('');
+            
+        document.getElementById('batch-total').innerText = '¥' + total.toLocaleString();
+        
+        const pct = Math.min((total / 5500) * 100, 100);
+        const bar = document.getElementById('batch-progress');
+        if(bar) {
+            bar.style.width = pct + '%';
+            const status = document.getElementById('batch-status');
+            if(total >= 5500) {
+                bar.classList.replace('bg-[#b08d76]', 'bg-green-500');
+                status.innerHTML = '<span class="text-green-600">✨ 恭喜達標！可免稅</span>';
             } else {
-                container.classList.add('hidden');
-                container.innerHTML = '';
+                bar.classList.replace('bg-green-500', 'bg-[#b08d76]');
+                status.innerText = `還差 ¥${(5500-total).toLocaleString()}`;
             }
         }
-
-        // --- 渲染 Navigation ---
-        function renderNav() {
-            ['itinerary', 'hotels', 'drive', 'tools'].forEach(tab => {
-                const btn = document.getElementById(`nav-${tab}`);
-                if (tab === activeTab) {
-                    btn.classList.remove('inactive-tab');
-                    btn.classList.add('active-tab', 'text-stone-900');
-                } else {
-                    btn.classList.remove('active-tab', 'text-stone-900');
-                    btn.classList.add('inactive-tab', 'text-stone-400');
-                }
-            });
+        lucide.createIcons();
+    }
+    
+    function delBatch(idx) { batchItems.splice(idx, 1); renderBatch(); }
+    function resetBatch() { batchItems = []; renderBatch(); document.getElementById('batch-list').classList.add('hidden'); }
+    function saveBatch() {
+        if(batchItems.length===0) return;
+        if(confirm('存入購物記帳？')) {
+            const newItems = batchItems.map(i => ({ name: `[免稅] ${i.name}`, price: i.price, qty: i.qty }));
+            budgetItems = [...budgetItems, ...newItems];
+            resetBatch();
+            renderBudget(); 
+            alert('已存入');
         }
+    }
 
-        // --- 渲染主要內容 (Switch) ---
-        function renderContent() {
-            const container = document.getElementById('main-content');
+    // --- Checklist ---
+    function initChecklist() {
+        document.querySelectorAll('input[type="checkbox"]').forEach(e=>{ 
+            if(localStorage.getItem(e.id)==='true') e.checked=true; 
+        });
+    }
+    function saveCheck(id) { 
+        localStorage.setItem(id, document.getElementById(id).checked); 
+    }
+    function resetDaily() { 
+        document.querySelectorAll('[id^="daily_"]').forEach(e=>{
+            e.checked=false; 
+            localStorage.setItem(e.id,'false');
+        }); 
+    }
+
+    // --- UI/Modal ---
+    let activeDayIdx = 0;
+
+    function renderDaySelector() {
+        const el = document.getElementById('day-selector');
+        el.innerHTML = TRIP_DATA.map((d, i) => `
+            <button onclick="setDay(${i})" class="flex-shrink-0 flex flex-col items-center group transition-all duration-300 ${i === activeDayIdx ? 'opacity-100 scale-110' : 'opacity-40 scale-100'}">
+                <span class="text-[10px] font-bold tracking-widest mb-1 ${i === activeDayIdx ? 'text-[#b08d76]' : 'text-stone-400'}">${d.weekday}</span>
+                <div class="w-12 h-12 rounded-full flex items-center justify-center border transition-all ${i === activeDayIdx ? 'bg-[#2c2c2c] text-[#f9f8f6] border-[#2c2c2c] shadow-lg' : 'bg-white text-stone-400 border-stone-200'}">
+                    <span class="font-serif text-lg font-bold">${d.date.split('/')[1]}</span>
+                </div>
+            </button>
+        `).join('');
+    }
+    function setDay(idx) { activeDayIdx = idx; renderDaySelector(); renderItinerary(); }
+
+    function openModal(index) {
+        currentModalData = TRIP_DATA[activeDayIdx].highlights[index];
+        const data = currentModalData;
+        const modal = document.getElementById('detail-modal');
+        const content = document.getElementById('modal-content');
+        const backdrop = document.getElementById('modal-backdrop');
+        const panel = document.getElementById('modal-panel');
+
+        // Render booking content safely
+        const bookingContent = data.booking ? `🔖 ${data.booking}` : '';
+        const bookingSection = (data.link && data.booking) 
+            ? `<a href="${data.link}" target="_blank" class="block w-full text-center py-3 bg-[#b83838] text-white rounded-xl font-bold mb-4 shadow-md active:scale-95 transition-transform flex items-center justify-center gap-2"><i data-lucide="external-link" class="w-4 h-4"></i> ${data.booking} (點擊開啟)</a>`
+            : data.booking 
+                ? `<div class="p-3 bg-stone-100 rounded-lg text-center font-mono text-stone-600 mb-6 font-bold tracking-wider">${bookingContent}</div>` 
+                : '';
+
+        let html = `
+            <div class="mb-5">
+                <span class="text-[10px] font-bold tracking-widest uppercase bg-stone-100 px-2 py-1 rounded text-stone-500">${data.type}</span>
+                <h2 class="text-2xl font-serif font-bold text-stone-800 mt-2">${data.title}</h2>
+                ${data.sub ? `<p class="text-sm text-[#b08d76] font-medium mt-1">${data.sub}</p>` : ''}
+            </div>
+
+            ${bookingSection}
+
+            <div class="bg-[#f9f8f6] rounded-xl p-4 mb-6 space-y-3">
+                ${data.address ? `<div class="flex gap-3 text-sm text-stone-600"><i data-lucide="map-pin" class="w-4 h-4 mt-0.5 flex-shrink-0 text-stone-400"></i> ${data.address}</div>` : ''}
+                ${data.mapcode ? `<div class="flex gap-3 text-sm text-stone-600"><i data-lucide="navigation" class="w-4 h-4 mt-0.5 flex-shrink-0 text-stone-400"></i> MapCode: <span class="font-mono font-bold">${data.mapcode}</span></div>` : ''}
+                ${data.tel ? `<div class="flex gap-3 text-sm text-stone-600"><i data-lucide="phone" class="w-4 h-4 mt-0.5 flex-shrink-0 text-stone-400"></i> 車機導航電話: <span class="font-mono font-bold">${data.tel}</span></div>` : ''}
+            </div>
+
+            ${data.desc ? `<div class="mb-8"><h4 class="font-bold text-stone-800 text-sm mb-3 flex items-center gap-2"><i data-lucide="book-open" class="w-4 h-4 text-[#b08d76]"></i> 關於此處</h4><p class="text-sm text-stone-600 leading-loose text-justify whitespace-pre-line font-light">${data.desc}</p></div>` : ''}
+
+            ${data.speak ? `<div class="mb-8"><h4 class="font-bold text-stone-800 text-sm mb-3 flex items-center gap-2"><i data-lucide="languages" class="w-4 h-4 text-[#b08d76]"></i> 指差會話</h4><div class="grid grid-cols-2 gap-3">${data.speak.map(s => `<button onclick="speakJp('${s.jp}')" class="p-3 bg-white border border-stone-200 rounded-xl text-left active:bg-stone-50 transition"><div class="text-[10px] text-stone-400 mb-1">${s.label}</div><div class="font-bold text-stone-800 text-sm">${s.jp}</div></button>`).join('')}</div></div>` : ''}
             
-            if (activeTab === 'itinerary') {
-                renderItineraryView(container);
-            } else if (activeTab === 'hotels') {
-                renderHotelsView(container);
-            } else if (activeTab === 'drive') {
-                renderDriveView(container);
-            } else if (activeTab === 'tools') {
-                renderToolsView(container);
-            }
+            ${data.menu ? `<div class="mb-20"><h4 class="font-bold text-stone-800 text-sm mb-3 flex items-center gap-2"><i data-lucide="utensils" class="w-4 h-4 text-[#b08d76]"></i> 必點推薦 (點擊放大)</h4><div class="space-y-2">${data.menu.map(m => `<div onclick="showBigCard('${m.name}','${m.jp}')" class="flex justify-between items-center p-3 bg-white border border-stone-100 rounded-xl cursor-pointer hover:border-[#b08d76] shadow-sm"><div><div class="font-bold text-stone-800">${m.name}</div><div class="text-xs text-stone-400">${m.jp}</div></div><span class="text-sm font-mono text-[#b08d76]">${m.price}</span></div>`).join('')}</div></div>` : ''}
+            
+            ${data.tabelog ? `<a href="${data.tabelog}" target="_blank" class="block w-full text-center py-3 bg-[#b83838] text-white rounded-xl font-bold mb-4">Tabelog 預約 / 資訊</a>` : ''}
+            
+            ${data.link ? `<a href="${data.link}" target="_blank" class="block w-full text-center py-3 bg-blue-600 text-white rounded-xl font-bold mb-4">開啟預約網頁</a>` : ''}
+        `;
+
+        content.innerHTML = html;
+        modal.classList.remove('hidden');
+        lucide.createIcons();
+        setTimeout(() => { backdrop.classList.remove('opacity-0'); panel.classList.remove('translate-y-full'); }, 10);
+    }
+    
+    function closeModal() {
+        const modal = document.getElementById('detail-modal');
+        const backdrop = document.getElementById('modal-backdrop');
+        const panel = document.getElementById('modal-panel');
+        
+        backdrop.classList.add('opacity-0');
+        panel.classList.add('translate-y-full');
+        setTimeout(() => { modal.classList.add('hidden'); }, 300);
+    }
+    
+    // --- Helpers ---
+    function openMap() { 
+        if(!currentModalData) return; 
+        const q = currentModalData.mapcode || currentModalData.address || currentModalData.title;
+        window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`, '_blank');
+    }
+    function showBigCard(zh, jp) {
+        document.getElementById('big-card-jp').innerText = jp;
+        document.getElementById('big-card-zh').innerText = zh;
+        document.getElementById('big-card-modal').classList.remove('hidden');
+    }
+    function closeBigCard() { document.getElementById('big-card-modal').classList.add('hidden'); }
+
+    function speakJp(text) {
+        if ('speechSynthesis' in window) {
+            const u = new SpeechSynthesisUtterance(text);
+            u.lang = 'ja-JP'; u.rate = 0.9;
+            window.speechSynthesis.speak(u);
         }
+    }
 
-        // 1. 行程視圖 (加入景點介紹按鈕 & Tabelog)
-        function renderItineraryView(container) {
-            const dayData = itineraryData[activeDay];
-            
-            // Trigger weather fetch after render
-            setTimeout(() => fetchDayWeather(activeDay), 50);
+    // --- Render Pages ---
+    function renderItinerary() {
+        const day = TRIP_DATA[activeDayIdx];
+        const container = document.getElementById('main-container');
+        
+        setTimeout(() => fetchDayWeather(day), 50);
 
-            let html = `
-                <div class="animate-in">
-                    <div class="flex items-center justify-between mb-4">
-                        <div>
-                            <h2 class="text-2xl font-bold text-stone-900">${dayData.location}</h2>
-                            <p class="text-stone-500 flex items-center gap-1 mt-1 font-medium">
-                                <i data-lucide="calendar" class="w-4 h-4"></i> ${dayData.date}
-                            </p>
-                        </div>
-                    </div>
+        container.innerHTML = `
+            <div class="animate-in pb-20">
+                <!-- VJW Card -->
+                ${day.date === '4/11' ? `
+                <div class="bg-[#2c2c2c] rounded-2xl p-5 mb-8 shadow-xl relative overflow-hidden group cursor-pointer" onclick="window.open('https://vjw-lp.digital.go.jp/zh-hant/', '_blank')">
+                    <div class="absolute right-[-20px] top-[-20px] w-24 h-24 bg-[#b08d76] rounded-full opacity-20 group-hover:scale-150 transition-transform duration-500"></div>
+                    <p class="text-[10px] text-[#b08d76] font-bold tracking-[0.2em] uppercase mb-2">Must Have</p>
+                    <h3 class="text-xl font-serif text-white font-bold mb-1">Visit Japan Web</h3>
+                    <p class="text-xs text-stone-400 font-light">入境審查 & 海關申報 QR Code</p>
+                    <i data-lucide="external-link" class="absolute right-5 bottom-5 text-white/50 w-5 h-5"></i>
+                </div>` : ''}
 
-                    <!-- Weather Widget Container -->
-                    <div id="weather-stats-${activeDay}" class="mb-6 min-h-[80px]">
-                        <div class="flex items-center gap-2 text-stone-400 text-sm animate-pulse">
-                            <i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> 載入氣象資訊...
-                        </div>
-                    </div>
+                <!-- Date Header -->
+                <div class="flex items-baseline justify-between mb-2 px-2">
+                    <h2 class="text-3xl font-serif font-bold text-stone-800">${day.location} <span class="text-lg text-stone-400 font-normal">Trip</span></h2>
+                    <span class="text-xs font-bold text-stone-400 tracking-widest">${day.day}</span>
+                </div>
+                
+                <div id="day-weather" class="mb-6 px-2 text-right min-h-[20px]"><span class="text-xs text-stone-300">Loading...</span></div>
 
-                    <div class="space-y-4">
-                        ${dayData.events.map((event, i) => `
-                            <div class="bg-white rounded-2xl p-4 shadow-sm border border-stone-100">
-                                <div class="flex gap-4">
-                                    <div class="mt-1">${getIconHtml(event.type)}</div>
-                                    <div class="flex-1">
-                                        <div class="flex justify-between items-start">
-                                            <h3 class="font-bold text-stone-800 leading-tight">${event.title}</h3>
-                                            ${event.nav ? `<button onclick="openNav('${event.nav}')" class="p-1.5 bg-stone-50 rounded-lg text-stone-400 hover:text-stone-800"><i data-lucide="navigation" class="w-4 h-4"></i></button>` : ''}
-                                        </div>
-                                        <p class="text-sm text-stone-500 mt-1">${event.detail}</p>
-                                        
-                                        ${event.booking ? `<div class="mt-2 inline-flex items-center gap-1.5 bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-md text-[10px] font-bold"><i data-lucide="ticket" class="w-3 h-3"></i> ${event.booking}</div>` : ''}
-                                        ${event.tips ? `<div class="mt-2 text-xs text-stone-500 italic">💡 ${event.tips}</div>` : ''}
-                                        ${event.highlight ? `<div class="mt-2 bg-rose-50 border-l-2 border-rose-300 p-2 text-xs font-bold text-rose-700">${event.highlight}</div>` : ''}
-                                        
-                                        <!-- 景點介紹按鈕 -->
-                                        ${ATTRACTION_DETAILS[event.title] ? `
-                                            <button onclick="openDetailModal('${event.title}')" class="mt-3 flex items-center gap-2 bg-amber-100 text-amber-700 px-3 py-2 rounded-lg text-xs font-bold hover:bg-amber-200 transition-colors">
-                                                <i data-lucide="book-open" class="w-4 h-4"></i> 📖 景點故事
-                                            </button>
-                                        ` : ''}
+                <!-- Timeline -->
+                <div class="relative space-y-8 pl-4">
+                    <div class="timeline-line"></div>
+                    
+                    ${day.highlights.map((item, i) => `
+                        <div class="relative pl-8 ${i === day.highlights.length - 1 ? 'last-item' : ''}">
+                            <div class="absolute left-0 top-0 flex flex-col items-center w-12">
+                                <span class="text-xs font-bold text-stone-400 mb-1 font-mono">${item.time}</span>
+                                <div class="w-3 h-3 rounded-full border-2 border-[#f9f8f6] shadow-sm z-10 ${item.type === 'FOOD' ? 'bg-[#b08d76]' : 'bg-[#2c2c2c]'}"></div>
+                            </div>
 
-                                        <!-- Tabelog 按鈕 (Replaced Image with Icon) -->
-                                        ${event.tabelog ? `
-                                            <a href="${event.tabelog}" target="_blank" class="mt-3 flex items-center gap-2 bg-rose-500 text-white px-3 py-2 rounded-lg text-xs font-bold hover:bg-rose-600 transition-colors shadow-sm w-fit">
-                                                <i data-lucide="utensils-crossed" class="w-4 h-4"></i> Tabelog 預約 / 資訊
-                                            </a>
-                                        ` : ''}
+                            <div class="bg-white rounded-2xl p-5 soft-shadow active:scale-[0.98] transition-transform cursor-pointer border border-transparent hover:border-stone-100" onclick='openModal(${i})'>
+                                <div class="flex justify-between items-start mb-2">
+                                    <div>
+                                        <span class="text-[9px] font-bold tracking-wider uppercase ${item.type === 'FOOD' ? 'text-[#b08d76]' : 'text-stone-400'} mb-1 block">${item.type}</span>
+                                        <h3 class="text-lg font-bold text-stone-800 leading-tight">${item.title}</h3>
+                                    </div>
+                                    <div class="w-8 h-8 rounded-full bg-[#f9f8f6] flex items-center justify-center text-stone-400">
+                                        <i data-lucide="${item.icon || getIcon(item.type)}" class="w-4 h-4"></i>
                                     </div>
                                 </div>
+                                ${item.link && item.booking 
+                                    ? `<div class="mb-2 inline-flex items-center gap-1 bg-stone-100 px-2 py-1 rounded text-[10px] font-mono text-stone-600 border border-stone-200 shadow-sm"><i data-lucide="link" class="w-3 h-3"></i> ${item.booking}</div>`
+                                    : item.booking 
+                                        ? `<div class="mb-2 inline-flex items-center gap-1 bg-stone-100 px-2 py-1 rounded text-[10px] font-mono text-stone-600">🔖 ${item.booking}</div>` 
+                                        : ''}
+                                ${item.tips ? `<div class="mb-2 inline-flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded text-[10px] font-mono text-yellow-700">💡 ${item.tips}</div>` : ''}
+                                ${item.sub ? `<p class="text-sm text-[#b08d76] font-medium mb-1">${item.sub}</p>` : ''}
+                                <p class="text-xs text-stone-500 leading-relaxed line-clamp-2">${item.desc}</p>
                             </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-            container.innerHTML = html;
-        }
-
-        // 2. 住宿視圖 (Filter out "(續住)")
-        function renderHotelsView(container) {
-            const hotels = itineraryData.flatMap(day => day.events.filter(e => e.type === 'stay' && !e.title.includes('(續住)')));
-            container.innerHTML = `
-                <div class="animate-in space-y-4">
-                    <h2 class="text-2xl font-bold mb-4">飯店匯總 🏨</h2>
-                    ${hotels.map(hotel => `
-                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-stone-100 flex justify-between items-center">
-                            <div>
-                                <h3 class="font-bold text-stone-800">${hotel.title}</h3>
-                                <p class="text-xs text-stone-500 mt-1">${hotel.detail}</p>
-                                <div class="mt-2 text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded inline-block uppercase">
-                                    ${hotel.booking}
-                                </div>
-                            </div>
-                            <button onclick="openNav('${hotel.nav}')" class="bg-stone-800 text-white p-2 rounded-xl">
-                                <i data-lucide="navigation" class="w-5 h-5"></i>
-                            </button>
                         </div>
                     `).join('')}
                 </div>
-            `;
-        }
+            </div>
+        `;
+        lucide.createIcons();
+    }
 
-        // 3. 自駕視圖
-        function renderDriveView(container) {
-            container.innerHTML = `
-                <div class="animate-in space-y-4">
-                    <h2 class="text-2xl font-bold mb-4">自駕必看 🚗</h2>
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-stone-100 space-y-4">
-                        <div class="flex gap-3">
-                            <div class="bg-blue-50 p-2 rounded-lg"><i data-lucide="ticket" class="w-5 h-5 text-blue-600"></i></div>
-                            <div>
-                                <h4 class="font-bold text-sm">CEP / ETC 卡</h4>
-                                <p class="text-xs text-stone-500 mt-1">取車時務必確認是否已租借 ETC 卡並詢問 CEP 吃到飽方案。</p>
-                            </div>
+    function renderHotels() {
+        const uniqueHotels = [];
+        const seen = new Set();
+        TRIP_DATA.forEach(day => {
+            day.highlights.forEach(h => {
+                if(h.type === 'STAY') {
+                    const key = h.booking || h.title;
+                    if(!seen.has(key)) { seen.add(key); uniqueHotels.push({...h, date:day.date}); }
+                }
+            });
+        });
+        
+        document.getElementById('main-container').innerHTML = `
+            <div class="animate-in pb-20 space-y-5">
+                <h2 class="text-2xl font-serif font-bold text-stone-800 mb-6 px-1">住宿列表</h2>
+                ${uniqueHotels.map(h => `
+                    <div class="magazine-card p-6 flex flex-col gap-3 shadow-sm bg-white rounded-2xl border border-stone-100">
+                        <div>
+                            <span class="text-[10px] font-bold tracking-widest text-[#b08d76] bg-[#f0ebe7] px-2 py-0.5 rounded mb-2 inline-block">Check-in: ${h.date}</span>
+                            <h3 class="font-serif font-bold text-lg text-stone-800 leading-snug">${h.title.replace('Check-in: ', '')}</h3>
+                            <p class="text-xs text-stone-400 mt-1 font-mono tracking-wider uppercase">${h.desc}</p>
                         </div>
-                        <div class="flex gap-3">
-                            <div class="bg-amber-50 p-2 rounded-lg"><i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600"></i></div>
-                            <div>
-                                <h4 class="font-bold text-sm">立山黑部停車 (4/16)</h4>
-                                <p class="text-xs text-stone-500 mt-1">請導航至「立山站」大型免費停車場，建議早上 7:00 前抵達以免客滿。</p>
-                            </div>
+                        <div class="bg-[#fcfbf9] border border-[#f0f0f0] p-3 rounded text-center">
+                            <p class="text-xs text-stone-400 uppercase tracking-widest mb-1">確認編號</p>
+                            <p class="font-mono font-bold text-stone-700 tracking-wider text-lg">${h.booking || 'N/A'}</p>
                         </div>
-                        <div class="flex gap-3 border-t pt-4">
-                            <div class="bg-green-50 p-2 rounded-lg"><i data-lucide="navigation" class="w-5 h-5 text-green-600"></i></div>
-                            <div>
-                                <h4 class="font-bold text-sm">加油提醒</h4>
-                                <p class="text-xs text-stone-500 mt-1">還車前需至指定加油站加滿油 (Regular)，並保留收據以供查驗。</p>
-                            </div>
-                        </div>
+                        <button onclick="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(h.address || h.title)}', '_blank')" class="w-full mt-1 py-3 border border-stone-200 text-stone-600 text-xs font-bold uppercase tracking-widest rounded hover:bg-stone-800 hover:text-white transition-colors">導航飯店</button>
+                    </div>
+                `).join('')}
+            </div>`;
+        lucide.createIcons();
+    }
+
+    function renderDrive() {
+        document.getElementById('main-container').innerHTML = `
+            <div class="animate-in pb-20 space-y-5">
+                <h2 class="text-2xl font-serif font-bold text-stone-800 mb-6 px-1">自駕指南</h2>
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-stone-100">
+                    <div class="flex items-start gap-4 mb-4">
+                        <div class="bg-[#eef2f5] p-3 rounded-full"><i data-lucide="ticket" class="w-6 h-6 text-[#5c7a80]"></i></div>
+                        <div><h4 class="font-bold text-stone-800">CEP / ETC Card</h4><p class="text-sm text-stone-500 font-light mt-1">取車時請務必確認是否已租借 ETC 卡，並詢問 CEP 高速公路吃到飽方案。</p></div>
                     </div>
                 </div>
-            `;
-        }
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-stone-100">
+                    <div class="flex items-start gap-4 mb-4">
+                        <div class="bg-[#fbe9e7] p-3 rounded-full"><i data-lucide="alert-triangle" class="w-6 h-6 text-[#b85c38]"></i></div>
+                        <div><h4 class="font-bold text-stone-800">立山黑部停車 (4/16)</h4><p class="text-sm text-stone-500 font-light mt-1">請導航至「立山站」大型免費停車場。建議早上 7:00 前抵達。</p></div>
+                    </div>
+                </div>
+            </div>`;
+        lucide.createIcons();
+    }
 
-        // 4. 工具視圖
-        function renderToolsView(container) {
-            container.innerHTML = `
-                <div class="animate-in space-y-6 pb-12">
-                    <!-- 檢查清單 -->
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-stone-100">
-                        <h3 class="font-bold text-stone-800 mb-3 flex items-center gap-2"><i data-lucide="check-square" class="text-teal-500 w-5 h-5"></i> 旅人檢查清單</h3>
-                        <div class="space-y-4">
-                            ${TOOLS_DATA.checklist.map(cat => `
-                                <div>
-                                    <p class="text-xs font-bold uppercase tracking-wider ${cat.bg} ${cat.color} px-2 py-1 rounded inline-block mb-2">${cat.name}</p>
-                                    <div class="grid grid-cols-2 gap-2">
-                                        ${cat.items.map(item => `
-                                            <button onclick="toggleCheck('${item.id}')" class="flex items-center gap-2 text-left p-2 rounded-lg border transition-all ${checklist[item.id] ? 'bg-stone-800 border-stone-800 text-white' : 'bg-white border-stone-200 text-stone-600'}">
-                                                <div class="w-4 h-4 rounded border flex items-center justify-center ${checklist[item.id] ? 'border-white' : 'border-stone-300'}">
-                                                    ${checklist[item.id] ? '<span class="text-xs">✓</span>' : ''}
-                                                </div>
-                                                <span class="text-xs font-medium">${item.label}</span>
-                                            </button>
-                                        `).join('')}
-                                    </div>
-                                </div>
-                            `).join('')}
-                            <div class="pt-4 border-t border-stone-100">
-                                <div class="flex justify-between items-center mb-2">
-                                    <p class="text-xs font-bold uppercase text-stone-400">每日退房檢查</p>
-                                    <button onclick="resetDaily()" class="text-xs text-blue-500 underline">重置</button>
-                                </div>
-                                <div class="space-y-2">
-                                    ${TOOLS_DATA.daily.map(item => `
-                                        <button onclick="toggleCheck('${item.id}')" class="w-full flex items-center gap-3 text-left p-2 rounded-lg border ${checklist[item.id] ? 'bg-stone-100 border-stone-300' : 'bg-white border-stone-200'}">
-                                            <div class="w-5 h-5 rounded border flex items-center justify-center ${checklist[item.id] ? 'bg-stone-800 border-stone-800 text-white' : 'bg-stone-300'}">
-                                                ${checklist[item.id] ? '<span class="text-xs">✓</span>' : ''}
-                                            </div>
-                                            <span class="text-sm ${checklist[item.id] ? 'text-stone-400 line-through' : 'text-stone-700'}">${item.label}</span>
-                                        </button>
+    function renderTools() {
+        document.getElementById('main-container').innerHTML = `
+            <div class="animate-in pb-20 space-y-8">
+                <!-- Checklist -->
+                <section>
+                    <h3 class="text-sm font-bold text-stone-400 uppercase tracking-widest mb-4 px-1">檢查清單</h3>
+                    <div class="bg-white rounded-2xl p-5 shadow-sm border border-stone-100 space-y-6">
+                        ${TOOLS_DATA.checklist.map(cat => `
+                            <div>
+                                <span class="${cat.color} text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider mb-2 inline-block">${cat.name}</span>
+                                <div class="grid grid-cols-2 gap-3 mt-2">
+                                    ${cat.items.map(item => `
+                                        <label class="flex items-center gap-2 cursor-pointer">
+                                            <input type="checkbox" id="${item.id}" onchange="saveCheck(this.id)" class="hidden">
+                                            <div class="w-4 h-4 rounded-full border border-stone-300 flex items-center justify-center bg-white"><i data-lucide="check" class="w-2.5 h-2.5 text-white check-icon"></i></div>
+                                            <span class="text-xs font-medium text-stone-600 select-none">${item.label}</span>
+                                        </label>
                                     `).join('')}
                                 </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- 手指日語 -->
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-stone-100">
-                        <h3 class="font-bold text-stone-800 mb-3 flex items-center gap-2"><i data-lucide="languages" class="text-green-500 w-5 h-5"></i> 手指日語 (點擊發音)</h3>
-                        <div class="grid grid-cols-2 gap-2">
-                            ${TOOLS_DATA.jp.map(p => `
-                                <button onclick="speakJp('${p.jp}', '${p.romaji}')" class="p-3 bg-stone-50 rounded-xl text-left hover:bg-stone-100 active:scale-95 transition-all">
-                                    <div class="text-[10px] text-stone-400">${p.zh}</div>
-                                    <div class="font-bold text-stone-800 text-sm">${p.romaji}</div>
-                                </button>
-                            `).join('')}
-                        </div>
-                        <!-- 空耳字幕顯示區 -->
-                        <div id="speak-status" class="text-center text-xs text-stone-400 mt-3 h-4 font-medium transition-all"></div>
-                    </div>
-
-                    <!-- 緊急聯絡 -->
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-stone-100">
-                        <h3 class="font-bold text-stone-800 mb-4 flex items-center gap-2"><i data-lucide="alert-triangle" class="text-red-500 w-5 h-5"></i> 緊急聯絡</h3>
-                        <div class="grid grid-cols-2 gap-3 mb-3">
-                            <a href="tel:110" class="border border-stone-200 rounded-xl p-3 text-center bg-red-50">
-                                <div class="text-xs text-red-400 mb-1 font-bold">警察 POLICE</div>
-                                <div class="text-2xl font-black text-red-600">110</div>
-                            </a>
-                            <a href="tel:119" class="border border-stone-200 rounded-xl p-3 text-center bg-red-50">
-                                <div class="text-xs text-red-400 mb-1 font-bold">救護 FIRE/AMB</div>
-                                <div class="text-2xl font-black text-red-600">119</div>
-                            </a>
-                        </div>
-                        <div class="p-3 bg-stone-50 rounded-xl flex justify-between items-center">
-                            <div><p class="text-xs text-stone-400">訪日外國人熱線 (JNTO)</p><p class="font-bold text-sm">050-3816-2787</p></div>
-                            <a href="tel:05038162787" class="bg-stone-200 text-stone-600 w-8 h-8 rounded-full flex items-center justify-center"><i data-lucide="phone" class="w-4 h-4"></i></a>
-                        </div>
-                    </div>
-
-                    <!-- 匯率換算 -->
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-stone-100">
-                        <h3 class="font-bold text-stone-800 mb-3 flex items-center gap-2"><i data-lucide="coins" class="text-yellow-500 w-5 h-5"></i> 即時匯率</h3>
-                        <div class="flex items-center gap-2 bg-stone-50 p-4 rounded-xl">
-                            <div class="flex-1">
-                                <label class="text-xs text-stone-400 block mb-1">日幣 (JPY)</label>
-                                <input type="number" id="jpy-input" oninput="convertCurrency()" placeholder="輸入" class="w-full bg-transparent text-xl font-bold text-stone-800 outline-none" />
-                            </div>
-                            <div class="text-stone-300">➜</div>
-                            <div class="flex-1 text-right">
-                                <label class="text-xs text-stone-400 block mb-1">台幣 (TWD)</label>
-                                <div id="twd-output" class="text-xl font-bold text-blue-500">0</div>
+                        `).join('')}
+                        <div class="pt-4 border-t border-stone-100">
+                            <div class="flex justify-between items-center mb-3"><span class="text-xs font-bold text-stone-800">每日退房檢查</span><button onclick="resetDaily()" class="text-[10px] text-stone-400 underline">重置</button></div>
+                            <div class="space-y-3">
+                                ${TOOLS_DATA.daily.map(item => `
+                                    <label class="w-full flex items-center gap-3 cursor-pointer">
+                                        <input type="checkbox" id="${item.id}" onchange="saveCheck(this.id)" class="hidden">
+                                        <div class="w-4 h-4 rounded border border-stone-300 flex items-center justify-center bg-white"><i data-lucide="check" class="w-3 h-3 text-white check-icon"></i></div>
+                                        <span class="text-sm text-stone-600 font-light select-none">${item.label}</span>
+                                    </label>
+                                `).join('')}
                             </div>
                         </div>
                     </div>
+                </section>
 
-                    <!-- 免稅湊單 (Fixed Layout) -->
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-stone-100">
-                        <div class="flex justify-between items-center mb-3">
-                            <h3 class="font-bold text-stone-800 flex items-center gap-2"><i data-lucide="calculator" class="text-pink-500 w-5 h-5"></i> 免稅湊單 (5500円)</h3>
-                            <button onclick="clearBatch()" class="text-xs text-red-400 underline">清空</button>
-                        </div>
-                        <div class="bg-pink-50 p-4 rounded-xl border border-pink-100">
-                            <!-- Store Name (Full Width) -->
-                            <div class="mb-2">
-                                <input id="batch-name" placeholder="品名" class="w-full p-2 rounded text-xs outline-none">
-                            </div>
-                            <!-- Price & Qty Row -->
-                            <div class="flex gap-2 mb-2">
-                                <input id="batch-price" type="number" placeholder="¥單價" class="w-24 p-2 rounded text-xs outline-none">
-                                <input id="batch-qty" type="number" placeholder="數量" value="1" class="w-16 p-2 rounded text-xs outline-none text-center">
-                                <button onclick="addBatchItem()" class="bg-pink-500 text-white px-4 rounded text-xs flex-1 flex items-center justify-center font-bold"><i data-lucide="plus" class="w-3 h-3 mr-1"></i> 加入</button>
-                            </div>
+                <!-- Phrases -->
+                <section>
+                    <h3 class="text-sm font-bold text-stone-400 uppercase tracking-widest mb-4 px-1">手指日語</h3>
+                    <div class="bg-white rounded-2xl p-5 shadow-sm border border-stone-100 grid grid-cols-2 gap-3">
+                        ${TOOLS_DATA.jp.map(p => `<button onclick="speakJp('${p.jp}')" class="p-3 bg-[#f9f9f9] border border-stone-100 rounded text-left hover:border-stone-300 transition-colors"><div class="text-[10px] text-stone-400 mb-1">${p.zh}</div><div class="font-medium text-stone-800 text-sm">${p.romaji}</div></button>`).join('')}
+                    </div>
+                </section>
 
-                            <div id="batch-list" class="bg-white/50 rounded-lg p-2 mb-3 max-h-32 overflow-y-auto hidden"></div>
-                            
-                            <div class="pt-2 border-t border-pink-200">
-                                <div class="flex justify-between text-xs mb-1">
-                                    <span class="text-stone-500">目前總計</span>
-                                    <span id="batch-total" class="font-bold text-pink-700">¥0</span>
-                                </div>
-                                <div class="w-full bg-pink-200 h-2 rounded-full mb-2 overflow-hidden">
-                                    <div id="batch-progress" class="h-full bg-pink-500 transition-all duration-500" style="width: 0%"></div>
-                                </div>
-                                <p id="batch-status" class="text-center text-xs font-bold text-pink-600 mb-3">還差 ¥5,500</p>
-                                
-                                <button onclick="saveBatch()" class="w-full bg-stone-800 text-white text-xs py-2 rounded-lg flex items-center justify-center gap-1 hover:bg-stone-700 active:scale-95 transition-all">
-                                    <i data-lucide="save" class="w-3 h-3"></i> 結算並存入記帳
-                                </button>
-                            </div>
+                <!-- Emergency -->
+                <section>
+                    <div class="bg-white rounded-2xl p-5 shadow-sm border border-red-100 flex justify-between items-center bg-[#fdf2f2] mb-4">
+                        <div><h3 class="font-bold text-stone-800">緊急聯絡</h3><p class="text-xs text-stone-500 mt-1">警察 110 / 救護車 119</p></div>
+                        <div class="flex gap-2">
+                            <a href="tel:110" class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-red-500 font-bold shadow-sm">110</a>
+                            <a href="tel:119" class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-red-500 font-bold shadow-sm">119</a>
                         </div>
                     </div>
 
-                    <!-- 購物記帳 (Fixed Layout) -->
-                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-stone-100">
-                        <div class="flex justify-between items-center mb-3">
-                            <h3 class="font-bold text-stone-800 flex items-center gap-2"><i data-lucide="shopping-bag" class="text-purple-500 w-5 h-5"></i> 購物記帳</h3>
-                            <button onclick="clearBudget()" class="text-xs text-red-400 underline">清空</button>
+                    <!-- JNTO -->
+                    <div class="p-3 bg-stone-50 rounded-xl flex justify-between items-center mb-2">
+                        <div>
+                            <p class="text-xs text-stone-400">訪日外國人熱線 (JNTO)</p>
+                            <p class="font-bold text-sm">050-3816-2787</p>
+                            <p class="text-[10px] text-stone-400">24小時 / 英日中韓</p>
                         </div>
-                        <div class="bg-stone-50 p-4 rounded-xl text-center mb-4">
-                            <p class="text-xs text-stone-400">總花費 (JPY)</p>
-                            <p id="total-jpy" class="text-3xl font-black text-stone-800">¥0</p>
-                            <p id="total-twd" class="text-xs text-stone-500 mt-1">約台幣 NT$ 0</p>
+                        <a href="tel:05038162787" class="w-10 h-10 bg-stone-200 rounded-full flex items-center justify-center text-stone-600"><i data-lucide="phone" class="w-5 h-5"></i></a>
+                    </div>
+
+                    <!-- TECO Osaka (For Nagoya) -->
+                    <div class="p-4 bg-red-50 border border-red-100 rounded-xl">
+                        <p class="text-xs text-red-500 font-bold mb-2">台北駐大阪經濟文化辦事處 (管轄名古屋)</p>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs text-stone-600">急難救助 (專人)</span>
+                            <a href="tel:+819087944568" class="font-bold text-red-600 text-sm">090-8794-4568</a>
                         </div>
-                        
-                        <!-- Input Area -->
-                        <div class="bg-stone-100 p-2 rounded-xl mb-4">
-                            <div class="mb-2">
-                                <input id="budget-name" placeholder="品項名稱" class="w-full p-2 bg-white rounded-lg text-xs outline-none">
-                            </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-stone-400">一般事項</span>
+                            <a href="tel:+81662278623" class="text-xs text-stone-500">06-6227-8623</a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tax Free -->
+                <section>
+                    <div class="flex justify-between items-center mb-4 px-1"><h3 class="text-sm font-bold text-stone-400 uppercase tracking-widest">免稅湊單</h3><button onclick="resetBatch()" class="text-[10px] text-stone-400 underline">清空</button></div>
+                    <div class="bg-white rounded-2xl p-5 shadow-sm border border-stone-100 bg-[#fffcfc]">
+                        <div class="mb-3 space-y-2">
+                            <input id="batch-name" placeholder="品名" class="w-full p-2 bg-white border border-stone-200 rounded text-xs outline-none">
                             <div class="flex gap-2">
-                                <input id="budget-price" type="number" placeholder="¥單價" class="w-24 p-2 bg-white rounded-lg text-xs outline-none">
-                                <input id="budget-qty" type="number" placeholder="數量" value="1" class="w-16 p-2 bg-white rounded-lg text-xs outline-none text-center">
-                                <button onclick="addBudgetItem()" class="bg-stone-800 text-white px-3 rounded-lg flex-1 flex items-center justify-center"><i data-lucide="plus" class="w-4 h-4 mr-1"></i> 記帳</button>
+                                <input id="batch-price" type="number" placeholder="¥ 單價" class="flex-1 p-2 bg-white border border-stone-200 rounded text-xs outline-none">
+                                <input id="batch-qty" type="number" placeholder="數量" value="1" class="w-16 p-2 bg-white border border-stone-200 rounded text-xs outline-none text-center">
+                                <button onclick="addBatchItem()" class="bg-[#2c2c2c] text-white px-4 rounded text-xs"><i data-lucide="plus" class="w-3 h-3"></i></button>
                             </div>
                         </div>
-
-                        <ul id="budget-list" class="space-y-2 max-h-60 overflow-y-auto"></ul>
+                        <div id="batch-list" class="hidden mb-4 space-y-2"></div>
+                        <div class="pt-3 border-t border-stone-100">
+                            <div class="flex justify-between text-xs mb-2"><span class="text-stone-500">總計</span><span id="batch-total" class="font-bold text-stone-800">¥0</span></div>
+                            <div class="w-full bg-stone-100 h-1.5 rounded-full mb-2 overflow-hidden"><div id="batch-progress" class="h-full bg-[#b85c38] transition-all duration-500" style="width: 0%"></div></div>
+                            <p id="batch-status" class="text-center text-[10px] font-bold text-[#b85c38] mb-4">還差 ¥5,500</p>
+                            <button onclick="saveBatch()" class="w-full py-2 border border-stone-300 text-stone-600 text-xs font-bold uppercase tracking-widest rounded hover:bg-stone-800 hover:text-white transition-colors">存入記帳</button>
+                        </div>
                     </div>
-                </div>
-            `;
-            
-            // Re-render sub-components after injection
-            renderBudgetList();
-        }
-
-        // --- 輔助函式 ---
-        function getIconHtml(type) {
-            const icons = {
-                transport: '<i data-lucide="car" class="w-5 h-5 text-blue-500"></i>',
-                food: '<i data-lucide="utensils" class="w-5 h-5 text-orange-500"></i>',
-                stay: '<i data-lucide="home" class="w-5 h-5 text-indigo-500"></i>',
-                shopping: '<i data-lucide="shopping-bag" class="w-5 h-5 text-pink-500"></i>',
-                attraction: '<i data-lucide="map-pin" class="w-5 h-5 text-green-500"></i>'
-            };
-            return icons[type] || '<i data-lucide="info" class="w-5 h-5 text-gray-500"></i>';
-        }
-
-        function openNav(query) {
-            window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`, '_blank');
-        }
-
-        function toggleCheck(id) {
-            checklist[id] = !checklist[id];
-            localStorage.setItem('trip_checks', JSON.stringify(checklist));
-            renderContent(); // Re-render to show check status
-            lucide.createIcons();
-        }
-
-        function resetDaily() {
-            TOOLS_DATA.daily.forEach(i => delete checklist[i.id]);
-            localStorage.setItem('trip_checks', JSON.stringify(checklist));
-            renderContent();
-            lucide.createIcons();
-        }
-
-        function speakJp(text, romaji) {
-            if ('speechSynthesis' in window) {
-                const u = new SpeechSynthesisUtterance(text);
-                u.lang = 'ja-JP';
-                u.rate = 0.9;
+                </section>
                 
-                // 顯示空耳字幕
-                const statusEl = document.getElementById('speak-status');
-                if (statusEl) {
-                    statusEl.innerText = `🔊 播放中: ${romaji}`;
-                    u.onend = function() { statusEl.innerText = ''; };
-                }
-                
-                window.speechSynthesis.speak(u);
-            } else {
-                alert('您的裝置不支援語音播放功能');
-            }
-        }
-
-        // --- 景點介紹 Modal 邏輯 ---
-        function openDetailModal(title) {
-            const content = ATTRACTION_DETAILS[title];
-            if (!content) return;
-            
-            currentModalText = content;
-            document.getElementById('modal-title').innerHTML = `<i data-lucide="book-open" class="w-5 h-5 text-amber-400"></i> ${title}`;
-            document.getElementById('modal-content').innerText = content;
-            document.getElementById('detail-modal').classList.remove('hidden');
-            lucide.createIcons(); // Refresh icons in modal
-        }
-
-        function closeDetailModal() {
-            document.getElementById('detail-modal').classList.add('hidden');
-            window.speechSynthesis.cancel(); // 關閉視窗時停止朗讀
-        }
-
-        function speakContent() {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel(); // Stop previous speech
-                const u = new SpeechSynthesisUtterance(currentModalText);
-                u.lang = 'zh-TW'; // 設定為中文
-                u.rate = 1.0;
-                window.speechSynthesis.speak(u);
-            } else {
-                alert('您的裝置不支援語音朗讀');
-            }
-        }
-
-        // --- 記帳 & 匯率 & 湊單邏輯 ---
-        function convertCurrency() {
-            const val = document.getElementById('jpy-input').value;
-            document.getElementById('twd-output').innerText = val ? Math.round(val * exchangeRate).toLocaleString() : 0;
-        }
-
-        // --- 修正後的免稅湊單邏輯 ---
-        function addBatchItem() {
-            const name = document.getElementById('batch-name').value;
-            const price = parseInt(document.getElementById('batch-price').value);
-            const qty = parseInt(document.getElementById('batch-qty').value) || 1; // 獲取數量，預設為 1
-
-            if(name && price) {
-                batchItems.push({name, price, qty});
-                document.getElementById('batch-name').value = '';
-                document.getElementById('batch-price').value = '';
-                document.getElementById('batch-qty').value = '1'; // 重置數量為 1
-                renderBatch();
-            }
-        }
-
-        function renderBatch() {
-            const list = document.getElementById('batch-list');
-            const total = batchItems.reduce((acc, i) => acc + (i.price * i.qty), 0); // 修正總額計算
-            const remaining = 5500 - total;
-            
-            list.classList.remove('hidden');
-            // 新增刪除按鈕
-            list.innerHTML = batchItems.map((i, idx) => `
-                <div class="flex justify-between items-center text-xs text-stone-600 mb-2 border-b border-pink-100 pb-1">
-                    <span>${i.name} <span class="text-stone-400">x${i.qty}</span></span>
-                    <div class="flex items-center gap-2">
-                        <span>¥${(i.price * i.qty).toLocaleString()}</span>
-                        <button onclick="deleteBatchItem(${idx})" class="text-stone-400 hover:text-red-500"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
+                <!-- Budget -->
+                <section>
+                    <div class="flex justify-between items-center mb-4 px-1"><h3 class="text-sm font-bold text-stone-400 uppercase tracking-widest">購物記帳</h3><button onclick="resetBudget()" class="text-[10px] text-stone-400 underline">清空</button></div>
+                    <div class="bg-white rounded-2xl p-5 shadow-sm border border-stone-100">
+                        <div class="bg-[#f9f8f4] p-4 rounded mb-5 text-center">
+                            <p class="text-[10px] text-stone-400 uppercase tracking-widest mb-1">總花費</p>
+                            <p id="total-jpy" class="text-3xl font-serif font-bold text-stone-800">¥0</p>
+                            <p id="total-twd" class="text-xs text-stone-500 mt-1 font-light">≈ NT$ 0</p>
+                        </div>
+                        <div class="mb-4 space-y-2">
+                            <input id="budget-name" placeholder="品名" class="w-full p-2 bg-stone-50 border border-stone-100 rounded text-xs outline-none">
+                            <div class="flex gap-2">
+                                <input id="budget-price" type="number" placeholder="¥ 單價" class="flex-1 p-2 bg-stone-50 border border-stone-100 rounded text-xs outline-none">
+                                <input id="budget-qty" type="number" placeholder="數量" value="1" class="w-16 p-2 bg-stone-50 border border-stone-100 rounded text-xs outline-none text-center">
+                                <button onclick="addItem()" class="bg-[#2c2c2c] text-white px-4 rounded text-xs"><i data-lucide="plus" class="w-3 h-3"></i></button>
+                            </div>
+                        </div>
+                        <ul id="budget-list" class="space-y-3 max-h-60 overflow-y-auto pr-1"></ul>
                     </div>
-                </div>
-            `).join('');
-            
-            document.getElementById('batch-total').innerText = '¥' + total.toLocaleString();
-            const pct = Math.min((total / 5500) * 100, 100);
-            const bar = document.getElementById('batch-progress');
-            bar.style.width = pct + '%';
-            bar.className = `h-full transition-all duration-500 ${total >= 5500 ? 'bg-green-500' : 'bg-pink-500'}`;
-            
-            const status = document.getElementById('batch-status');
-            if(total >= 5500) {
-                status.innerText = "✨ 已達免稅門檻！";
-                status.className = "text-center text-xs font-bold text-green-600 mb-3";
-            } else {
-                status.innerText = `還差 ¥${remaining.toLocaleString()}`;
-                status.className = "text-center text-xs font-bold text-pink-600 mb-3";
-            }
-            lucide.createIcons(); // Refresh delete icons
-        }
+                </section>
+            </div>
+        `;
+        lucide.createIcons();
+        initChecklist();
+        renderBudget();
+    }
 
-        function deleteBatchItem(idx) {
-            batchItems.splice(idx, 1);
-            renderBatch();
-        }
+    // 3. EXECUTE ON LOAD
+    document.addEventListener('DOMContentLoaded', () => {
+        initDynamicPadding();
+        renderDaySelector();
+        renderItinerary();
+        lucide.createIcons();
+        fetchRate();
+        fetchLocalWeather(); 
+    });
 
-        function saveBatch() {
-            if(batchItems.length === 0) return;
-            if(confirm(`將這 ${batchItems.length} 筆資料存入購物紀錄？`)) {
-                const store = "免稅湊單"; // 簡化
-                const newItems = batchItems.map(i => ({ name: `[${store}] ${i.name}`, price: i.price, qty: i.qty }));
-                budgetItems = [...budgetItems, ...newItems]; // Add to main budget
-                localStorage.setItem('trip_budget', JSON.stringify(budgetItems)); // Save immediately
-                
-                batchItems = []; 
-                renderBatch(); 
-                document.getElementById('batch-list').classList.add('hidden');
-                
-                // Switch to budget view or just notify? Let's just notify and re-render budget list if visible
-                renderBudgetList(); 
-                alert('已成功存入購物記帳！');
-            }
-        }
-
-        function clearBatch() { batchItems = []; renderBatch(); document.getElementById('batch-list').classList.add('hidden'); }
-
-        // --- 修正後的購物記帳邏輯 ---
-        function addBudgetItem() {
-            const name = document.getElementById('budget-name').value;
-            const price = parseInt(document.getElementById('budget-price').value);
-            const qty = parseInt(document.getElementById('budget-qty').value) || 1;
-
-            if(name && price) {
-                budgetItems.push({name, price, qty});
-                localStorage.setItem('trip_budget', JSON.stringify(budgetItems));
-                document.getElementById('budget-name').value = '';
-                document.getElementById('budget-price').value = '';
-                document.getElementById('budget-qty').value = '1';
-                renderBudgetList();
-            }
-        }
-
-        function clearBudget() {
-            if(confirm('確定清空記帳？')) {
-                budgetItems = [];
-                localStorage.setItem('trip_budget', JSON.stringify(budgetItems));
-                renderBudgetList();
-            }
-        }
-
-        function renderBudgetList() {
-            const list = document.getElementById('budget-list');
-            if(!list) return;
-            const total = budgetItems.reduce((acc, i) => acc + (i.price * i.qty), 0);
-            
-            document.getElementById('total-jpy').innerText = '¥' + total.toLocaleString();
-            document.getElementById('total-twd').innerText = '約台幣 NT$ ' + Math.round(total * exchangeRate).toLocaleString();
-
-            list.innerHTML = budgetItems.map((item, i) => `
-                <li class="flex justify-between items-center border-b border-stone-100 pb-2 text-sm">
-                    <span class="text-stone-600">${item.name} <span class="text-xs text-stone-400">x${item.qty}</span></span>
-                    <div class="flex items-center gap-3">
-                        <span class="font-bold">¥${(item.price * item.qty).toLocaleString()}</span>
-                        <button onclick="deleteBudgetItem(${i})" class="text-stone-300 hover:text-red-400"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                    </div>
-                </li>
-            `).join('');
-            lucide.createIcons();
-        }
-
-        function deleteBudgetItem(idx) {
-            budgetItems.splice(idx, 1);
-            localStorage.setItem('trip_budget', JSON.stringify(budgetItems));
-            renderBudgetList();
-        }
-    </script>
+    window.addEventListener('resize', initDynamicPadding);
+</script>
 </body>
 </html>

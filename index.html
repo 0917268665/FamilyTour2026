@@ -24,7 +24,6 @@
             background-color: var(--bg-paper); 
             color: var(--text-main); 
             -webkit-tap-highlight-color: transparent;
-            /* 針對 iPhone瀏海設計 */
             padding-top: env(safe-area-inset-top);
         }
 
@@ -71,20 +70,17 @@
         input:checked + div .check-icon { opacity: 1; transform: scale(1); }
         input:checked ~ span { text-decoration: line-through; color: #b0b0b0; }
         
-        /* 確保 Header 背景不透明，避免混淆 */
         #header { background-color: rgba(249, 248, 246, 0.98); }
     </style>
 </head>
 <body class="pb-24">
 
-    <!-- Header (調整 padding) -->
+    <!-- Header -->
     <div class="fixed top-0 left-0 right-0 z-30 backdrop-blur-md px-6 pt-4 pb-2 transition-all shadow-sm border-b border-stone-200/50" id="header">
         <div class="text-center mb-2">
             <p class="text-[10px] tracking-[0.3em] text-stone-400 uppercase mb-1">Family Trip</p>
             <h1 class="text-xl font-bold tracking-widest text-stone-800">昇龍道.立山黑部 <span class="border border-stone-800 rounded-full px-2 text-xs font-normal align-middle ml-1">2026.04</span></h1>
         </div>
-        
-        <!-- Day Scroll -->
         <div id="day-selector" class="flex overflow-x-auto gap-6 no-scrollbar justify-start px-2 pb-2 snap-x transition-all duration-300"></div>
     </div>
 
@@ -103,6 +99,12 @@
     <div id="detail-modal" class="fixed inset-0 z-50 hidden flex items-end sm:items-center justify-center pointer-events-none">
         <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px] transition-opacity opacity-0 pointer-events-auto" id="modal-backdrop" onclick="closeModal()"></div>
         <div class="bg-white w-full max-w-md h-[85vh] sm:h-[800px] sm:rounded-2xl rounded-t-3xl shadow-2xl transform translate-y-full transition-transform duration-300 pointer-events-auto flex flex-col relative" id="modal-panel">
+            
+            <!-- Close Button (New) -->
+            <button onclick="closeModal()" class="absolute top-4 right-4 p-2 bg-stone-100 rounded-full text-stone-500 hover:bg-stone-200 z-20 active:scale-90 transition-transform">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
             <div class="w-full flex justify-center pt-3 pb-1" onclick="closeModal()"><div class="w-12 h-1.5 bg-gray-200 rounded-full"></div></div>
             <div class="flex-1 overflow-y-auto p-6 pt-2"><div id="modal-content"></div></div>
             <div class="p-4 border-t border-gray-50 bg-white safe-area-bottom">
@@ -146,7 +148,7 @@
                 { 
                     time: "13:30", type: "FOOD", title: "午餐：蓬萊軒", sub: "鰻魚飯三吃 (Hitsumabushi)", 
                     address: "愛知県名古屋市熱田区神戸町503", tel: "052-671-8686",
-                    desc: "【百年老店的堅持】\n蓬萊軒是「鰻魚飯三吃」的發源地。他們的醬汁是創業以來代代相傳的「秘傳醬汁」，每一口都是歷史的味道。\n\n【三吃法教學】\n1. 第一碗：品嚐鰻魚與醬汁的原味。\n2. 第二碗：加入海苔、蔥花、山葵等佐料，口感更清爽。\n3. 第三碗：淋上高湯做成茶泡飯，完美收尾。",
+                    desc: "【百年老店的堅持】\n蓬萊軒是「鰻魚飯三吃（ひつまぶし）」的發源地，擁有超過140年的歷史。他們的醬汁是創業以來代代相傳的「秘傳醬汁」，每一口都是歷史的味道。\n\n【三吃法教學】\n1. 第一碗：品嚐鰻魚與醬汁的原味。\n2. 第二碗：加入海苔、蔥花、山葵等佐料，口感更清爽。\n3. 第三碗：淋上高湯做成茶泡飯，完美收尾。",
                     menu: [ { name: "鰻魚飯三吃", jp: "ひつまぶし", price: "¥4,600" }, { name: "鰻魚玉子燒", jp: "うまき", price: "¥1,200" } ],
                     speak: [{label:"我有預約", jp:"予約しています"}, {label:"有推薦的嗎", jp:"おすすめは？"}],
                     tabelog: 'https://tabelog.com/aichi/A2301/A230112/23000063/'
@@ -342,7 +344,14 @@
         "吉卜力公園 Ghibli Park": "吉卜力公園位於愛知縣，是將原本的「愛・地球博紀念公園」重新規劃，讓宮崎駿筆下的奇幻世界真實重現。這裡與一般主題樂園最大的不同是——沒有大型雲霄飛車，沒有人偶裝表演，主打「散步、發現、感受」。\n\n【主要區域】\n1. 吉卜力大倉庫：這是室內型的大展覽館，收藏了吉卜力作品的秘密。您可以在這裡與《神隱少女》的無臉男合照，或是看到《天空之城》巨大的機器人兵。\n\n2. 青春之丘：重現了《心之谷》中的古董店「地球屋」，站在高處可以俯瞰園區。\n\n3. Dondoko之森：以《龍貓》為主題，穿過森林步道後，會看到小月和小梅的家。\n\n這裡的每個角落都藏著細節，請放慢腳步，在森林與微風中尋找屬於您的童話回憶吧！",
         "飛驒古川 瀨戶川鯉魚": "飛驒古川（Hida Furukawa）是一個比高山更寧靜、更具生活感的古老小鎮，因動畫電影《你的名字》在此取景而聲名大噪。\n\n【必看亮點】\n1. 白壁土藏街與瀨戶川：這是古川最經典的畫面。沿著清澈的瀨戶川，排列著一整排白牆黑瓦的傳統倉庫（土藏）。川裡游著上千條色彩斑斕的錦鯉，您可以購買魚飼料餵食，感受悠閒的午後時光。\n\n2. 《你的名字》聖地巡禮：\n- 飛驒古川車站：電影中瀧尋找三葉時出現的車站場景，一定要在天橋上拍一張列車進站的畫面。\n- 飛驒市圖書館：瀧在此查閱關於糸守町的資料。\n- 氣多若宮神社：電影中宮水神社的原型之一。\n\n這裡沒有高山老街的擁擠喧囂，多了一份屬於飛驒山城的靜謐與優雅。",
         "新穗高雙層纜車": "新穗高高空纜車（Shinhotaka Ropeway）是日本唯一的雙層纜車，帶您直達標高2156公尺的雲端世界，輕鬆飽覽北阿爾卑斯山的壯麗全景。\n\n【空中漫步體驗】\n纜車分為兩段，第一段從新穗高溫泉站到鍋平高原站，第二段則是著名的雙層纜車，直達西穗高口站。隨著纜車緩緩爬升，原本仰望的群山逐漸變為平視，最後將整個槍之岳、穗高連峰踩在腳下。\n\n【山頂展望台】\n西穗高口站頂樓的展望台榮獲《米其林綠色指南》二星評價。在這裡，您可以360度無死角地欣賞綿延的雪峰與雲海。如果在冬季或春初前往，還能體驗在比人還高的「雪之迴廊」中散步的樂趣。",
-        "雨晴海岸": "雨晴海岸（Amaharashi Coast）被選為「日本海濱百選」之一，位於富山縣高岡市。這裡擁有世界上極為罕見的奇景——「隔著海洋眺望3000公尺級的高山」。\n\n【絕景構圖】\n天氣晴朗時，您可以站在海邊，看著湛藍的富山灣，而海平面的對岸竟然矗立著終年積雪的立山連峰！前景著名的「女岩」與後方雄偉的雪山相互輝映，彷彿一幅潑墨山水畫。\n\n【義經岩傳說】\n海岸邊有一塊巨大的岩石叫做「義經岩」。傳說源義經在被哥哥源賴朝追殺逃亡至北陸時，曾在此岩石下躲避驟雨等待天晴，這也是「雨晴」地名的由來。"
+        "雨晴海岸": "雨晴海岸（Amaharashi Coast）被選為「日本海濱百選」之一，位於富山縣高岡市。這裡擁有世界上極為罕見的奇景——「隔著海洋眺望3000公尺級的高山」。\n\n【絕景構圖】\n天氣晴朗時，您可以站在海邊，看著湛藍的富山灣，而海平面的對岸竟然矗立著終年積雪的立山連峰！前景著名的「女岩」與後方雄偉的雪山相互輝映，彷彿一幅潑墨山水畫。\n\n【義經岩傳說】\n海岸邊有一塊巨大的岩石叫做「義經岩」。傳說源義經在被哥哥源賴朝追殺逃亡至北陸時，曾在此岩石下躲避驟雨等待天晴，這也是「雨晴」地名的由來。",
+        "大須觀音 & 商店街": "大須觀音（Osu Kannon）是日本三大觀音之一，香火鼎盛。而緊鄰的「大須商店街」更是名古屋最熱鬧的購物區，有超過1200家店鋪。\n\n【商店街特色】\n1. 異國風情：這裡有來自世界各國的美食，如台灣炸雞、土耳其烤肉、巴西烤雞等。\n2. 古著與次文化：大須也被稱為「名古屋的秋葉原」，有許多動漫周邊、女僕咖啡廳以及風格獨特的二手衣店。\n3. 必吃美食：炸饅頭、鯛魚燒、糰子等邊走邊吃的銅板美食。",
+        "綠洲21 & 電視塔": "綠洲21（Oasis 21）是名古屋的地標建築，最吸睛的是頂層的「水的宇宙船」。\n\n【水的宇宙船】\n這是一個巨大的橢圓形玻璃屋頂，上面鋪滿了流動的水，在陽光照射下波光粼粼。晚上點燈後，配合旁邊的名古屋電視塔（中部電力 MIRAI TOWER），呈現出極具未來感的夜景。\n\n您可以免費走上玻璃屋頂散步，是拍攝名古屋夜景的最佳地點。",
+        "馬籠宿 Magome-juku": "馬籠宿是江戶時代連接東京與京都的「中山道」上的第43個宿場町（驛站）。\n\n【石板坡道】\n與其他宿場不同，馬籠宿是沿著陡峭的山坡而建。走在蜿蜒的石板路上，兩旁是保留完整的江戶時代木造建築，彷彿穿越時空。\n\n【必吃：五平餅】\n這是一種將米飯搗碎後裹在木串上，塗上核桃味噌醬炭烤的鄉土料理，香氣撲鼻。",
+        "妻籠宿 Tsumago-juku": "妻籠宿是日本第一個「重要傳統建造物群保存地區」。當地的居民發起了「不賣、不租、不拆」的運動，才得以將這份珍貴的遺產完整保留下來。\n\n【原汁原味】\n相比馬籠宿，這裡更顯質樸與寧靜。這裡完全看不到電線桿和現代招牌，完整重現了幾百年前江戶時代的街道風貌。建議可以參觀「脇本陣奧谷」，感受當年大名（諸侯）住宿的奢華。",
+        "國寶 松本城": "松本城是日本現存最古老的五重六階木造天守閣，與姬路城、彥根城等並列為日本國寶。\n\n【烏城之美】\n不同於姬路城的白色，松本城的外牆塗滿了黑漆，因此被稱為「烏城」。黑色的城堡在北阿爾卑斯雪山的映襯下，顯得格外莊嚴肅穆。\n\n【建築特色】\n天守閣內部保留了戰國時代的結構，樓梯非常陡峭（最大斜度約61度），攀爬時請務必小心。",
+        "春之四重奏 (朝日町)": "春之四重奏（Spring Quartet）是富山縣朝日町春季限定的絕景。\n\n【四重奏的組成】\n1. 白色的北阿爾卑斯殘雪（背景）\n2. 粉紅色的舟川櫻花林\n3. 鮮黃色的油菜花田\n4. 紅色的鬱金香花田\n\n這四種色彩在同一個畫面中綻放，是大自然最美的協奏曲。最佳觀賞期通常在4月上旬至中旬。",
+        "名古屋城 (外圍拍照)": "名古屋城由德川家康下令建造，是日本三大名城之一。\n\n【金鯱】\n天守閣屋頂上有一對金色的「鯱（Shachihoko）」，是名古屋的象徵，代表著德川家的威嚴。\n\n【本丸御殿】\n雖然天守閣目前因耐震工程關閉中（可能僅能外觀拍照），但修復完成的「本丸御殿」內部金碧輝煌，屏風壁畫極盡奢華，非常值得入內參觀。"
     };
 
     // ---------------------------------------------------------
@@ -661,7 +670,7 @@
 
             ${data.speak ? `<div class="mb-8"><h4 class="font-bold text-stone-800 text-sm mb-3 flex items-center gap-2"><i data-lucide="languages" class="w-4 h-4 text-[#b08d76]"></i> 指差會話</h4><div class="grid grid-cols-2 gap-3">${data.speak.map(s => `<button onclick="speakJp('${s.jp}')" class="p-3 bg-white border border-stone-200 rounded-xl text-left active:bg-stone-50 transition"><div class="text-[10px] text-stone-400 mb-1">${s.label}</div><div class="font-bold text-stone-800 text-sm">${s.jp}</div></button>`).join('')}</div></div>` : ''}
             
-            ${data.menu ? `<div class="mb-20"><h4 class="font-bold text-stone-800 text-sm mb-3 flex items-center gap-2"><i data-lucide="utensils" class="w-4 h-4 text-[#b08d76]"></i> 必點推薦</h4><div class="space-y-2">${data.menu.map(m => `<div onclick="showBigCard('${m.name}','${m.jp}')" class="flex justify-between items-center p-3 bg-white border border-stone-100 rounded-xl cursor-pointer hover:border-[#b08d76] shadow-sm"><div><div class="font-bold text-stone-800">${m.name}</div><div class="text-xs text-stone-400">${m.jp}</div></div><span class="text-sm font-mono text-[#b08d76]">${m.price}</span></div>`).join('')}</div></div>` : ''}
+            ${data.menu ? `<div class="mb-20"><h4 class="font-bold text-stone-800 text-sm mb-3 flex items-center gap-2"><i data-lucide="utensils" class="w-4 h-4 text-[#b08d76]"></i> 必點推薦 (點擊放大)</h4><div class="space-y-2">${data.menu.map(m => `<div onclick="showBigCard('${m.name}','${m.jp}')" class="flex justify-between items-center p-3 bg-white border border-stone-100 rounded-xl cursor-pointer hover:border-[#b08d76] shadow-sm"><div><div class="font-bold text-stone-800">${m.name}</div><div class="text-xs text-stone-400">${m.jp}</div></div><span class="text-sm font-mono text-[#b08d76]">${m.price}</span></div>`).join('')}</div></div>` : ''}
             
             ${data.tabelog ? `<a href="${data.tabelog}" target="_blank" class="block w-full text-center py-3 bg-[#b83838] text-white rounded-xl font-bold mb-4">Tabelog 預約 / 資訊</a>` : ''}
             

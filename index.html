@@ -1149,26 +1149,6 @@ function renderDrive() {
         renderBudget();
     }
 
-    async function fetchRate() {
-        try {
-            const res = await fetch('https://api.exchangerate-api.com/v4/latest/JPY');
-            const data = await res.json();
-            if(data.rates.TWD) {
-                currentRate = data.rates.TWD;
-                // 更新畫面上顯示匯率的地方
-                const rateDisplay = document.getElementById('calc-rate-display');
-                if(rateDisplay) rateDisplay.innerText = currentRate.toFixed(3);
-                
-                // 如果購物記帳有資料，順便更新記帳
-                if(typeof renderBudget === 'function') renderBudget(); 
-                
-                // 重新觸發一次換算，讓輸入框的數字更新
-                convertCurrency();
-            }
-        } catch(e) {
-            console.log("匯率抓取失敗");
-        }
-    }
     // 3. EXECUTE ON LOAD
     document.addEventListener('DOMContentLoaded', () => {
         initDynamicPadding();

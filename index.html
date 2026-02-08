@@ -28,7 +28,11 @@
         }
 
         h1, h2, h3, .serif { font-family: 'Noto Serif TC', serif; }
-        .jp-font { font-family: 'Zen Old Mincho', serif; }
+        .jp-font { 
+    /* 優先使用 iOS 內建日文黑體，如果沒有則使用微軟正黑體 */
+    font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Meiryo", sans-serif;
+    font-weight: 700; /* 加粗，讓店家看得更清楚 */
+}
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -189,7 +193,7 @@
             ]
         },
         {
-            day: "Day 2", date: "4/12", weekday: "SUN", location: "伊那/高山",
+            day: "Day 2", date: "4/12", weekday: "SUN", location: "中山道/高山",
             lat: 36.14, lon: 137.25,
             highlights: [
                 { time: "08:00", type: "DRIVE", title: "出發前往中山道", desc: "經由中央自動車道 (約1.5hr)", icon: "navigation" },

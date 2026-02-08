@@ -1078,7 +1078,28 @@ function renderDrive() {
                         </div>
                     </div>
                 </section>
+                <!-- 匯率換算 -->
+                  <div class="animate-in pb-20 space-y-8">
+                
+                <section>
+                    <div class="flex justify-between items-center mb-4 px-1">
+                        <h3 class="text-sm font-bold text-stone-400 uppercase tracking-widest">匯率換算</h3>
+                        <div class="text-[10px] text-stone-400">匯率: <span id="calc-rate-display">loading...</span></div>
+                    </div>
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-stone-100 flex flex-col gap-4">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-stone-100 flex items-center justify-center font-bold text-stone-600">¥</div>
+                            <input id="calc-jpy" type="number" oninput="convertCurrency()" placeholder="輸入日幣金額" class="flex-1 text-2xl font-bold text-stone-800 outline-none bg-transparent placeholder-stone-200" inputmode="numeric">
+                        </div>
+                        
+                        <div class="h-px bg-stone-100 w-full"></div>
 
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-[#b08d76] flex items-center justify-center font-bold text-white">NT$</div>
+                            <div id="calc-twd" class="flex-1 text-2xl font-bold text-[#b08d76]">0</div>
+                        </div>
+                    </div>
+                </section>
                 <!-- Tax Free -->
                 <section>
                     <div class="flex justify-between items-center mb-4 px-1"><h3 class="text-sm font-bold text-stone-400 uppercase tracking-widest">免稅湊單</h3><button onclick="resetBatch()" class="text-[10px] text-stone-400 underline">清空</button></div>
@@ -1128,6 +1149,26 @@ function renderDrive() {
         renderBudget();
     }
 
+    async function fetchRate() {
+        try {
+            const res = await fetch('https://api.exchangerate-api.com/v4/latest/JPY');
+            const data = await res.json();
+            if(data.rates.TWD) {
+                currentRate = data.rates.TWD;
+                // 更新畫面上顯示匯率的地方
+                const rateDisplay = document.getElementById('calc-rate-display');
+                if(rateDisplay) rateDisplay.innerText = currentRate.toFixed(3);
+                
+                // 如果購物記帳有資料，順便更新記帳
+                if(typeof renderBudget === 'function') renderBudget(); 
+                
+                // 重新觸發一次換算，讓輸入框的數字更新
+                convertCurrency();
+            }
+        } catch(e) {
+            console.log("匯率抓取失敗");
+        }
+    }
     // 3. EXECUTE ON LOAD
     document.addEventListener('DOMContentLoaded', () => {
         initDynamicPadding();
@@ -1162,6 +1203,23 @@ function renderDrive() {
             }
         }
     }
+
+    function convertCurrency() {
+        const jpyInput = document.getElementById('calc-jpy'); // 抓取輸入框
+        const twdOutput = document.getElementById('calc-twd'); // 抓取顯示區
+        
+        if(jpyInput && twdOutput) {
+            const jpy = parseFloat(jpyInput.value);
+            
+            if(!isNaN(jpy)) {
+                // currentRate 是全域變數，會由 fetchRate() 自動更新
+                twdOutput.innerText = Math.round(jpy * currentRate).toLocaleString();
+            } else {
+                twdOutput.innerText = '0';
+            }
+        }
+    }
+
     // 每秒更新一次
     setInterval(updateCountdown, 1000);
     updateCountdown(); // 初始化執行一次

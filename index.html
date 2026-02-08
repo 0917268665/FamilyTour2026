@@ -587,12 +587,20 @@
         } catch(e){ console.log("Rate Fetch Error", e); }
     }
     
-    function convertCurrency() {
-        const jpyInput = document.getElementById('jpy-input');
-        const twdOutput = document.getElementById('twd-output');
+function convertCurrency() {
+        // 這裡的 ID 必須跟上面 HTML 裡的 id="calc-jpy" 對應
+        const jpyInput = document.getElementById('calc-jpy'); 
+        const twdOutput = document.getElementById('calc-twd');
+        
         if(jpyInput && twdOutput) {
-            const val = jpyInput.value;
-            twdOutput.innerText = val ? Math.round(val * currentRate).toLocaleString() : 0;
+            const jpy = parseFloat(jpyInput.value);
+            
+            if(!isNaN(jpy)) {
+                // currentRate 是全域變數，會由 fetchRate() 自動更新
+                twdOutput.innerText = Math.round(jpy * currentRate).toLocaleString();
+            } else {
+                twdOutput.innerText = '0';
+            }
         }
     }
 
@@ -1078,9 +1086,7 @@ function renderDrive() {
                         </div>
                     </div>
                 </section>
-                <!-- 匯率換算 -->
-                  <div class="animate-in pb-20 space-y-8">
-                
+                <!-- 匯率 -->
                 <section>
                     <div class="flex justify-between items-center mb-4 px-1">
                         <h3 class="text-sm font-bold text-stone-400 uppercase tracking-widest">匯率換算</h3>
@@ -1183,23 +1189,6 @@ function renderDrive() {
             }
         }
     }
-
-    function convertCurrency() {
-        const jpyInput = document.getElementById('calc-jpy'); // 抓取輸入框
-        const twdOutput = document.getElementById('calc-twd'); // 抓取顯示區
-        
-        if(jpyInput && twdOutput) {
-            const jpy = parseFloat(jpyInput.value);
-            
-            if(!isNaN(jpy)) {
-                // currentRate 是全域變數，會由 fetchRate() 自動更新
-                twdOutput.innerText = Math.round(jpy * currentRate).toLocaleString();
-            } else {
-                twdOutput.innerText = '0';
-            }
-        }
-    }
-
     // 每秒更新一次
     setInterval(updateCountdown, 1000);
     updateCountdown(); // 初始化執行一次

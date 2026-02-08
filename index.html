@@ -28,11 +28,19 @@
         }
 
         h1, h2, h3, .serif { font-family: 'Noto Serif TC', serif; }
-        .jp-font { 
-    /* 優先使用 iOS 內建日文黑體，如果沒有則使用微軟正黑體 */
-    font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Meiryo", sans-serif;
-    font-weight: 700; /* 加粗，讓店家看得更清楚 */
-}
+.jp-font { 
+            /* 第一順位：iPhone 內建的日文黑體 (ProN) */
+            /* 第二順位：新款 iPhone 的日文黑體 (Sans) */
+            /* 第三順位：Windows 的日文黑體 (Meiryo) */
+            /* 最後手段：無襯線體 */
+            font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Meiryo", sans-serif !important;
+            
+            /* 強制加粗 */
+            font-weight: 700; 
+            
+            /* 稍微調整字距，讓日文更好讀 */
+            letter-spacing: 0.02em;
+        }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

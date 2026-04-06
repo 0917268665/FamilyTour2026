@@ -153,7 +153,7 @@
     // ---------------------------------------------------------
     // 1. DATA DEFINITIONS
     // ---------------------------------------------------------
-    const TRIP_DATA = [
+const TRIP_DATA = [
         {
             day: "Day 1", date: "4/11", weekday: "SAT", location: "名古屋",
             lat: 35.18, lon: 136.90,
@@ -168,95 +168,86 @@
                     tips: "密碼: 17f23cd8 / 現場付 ¥148,632", icon: "car" 
                 },
                 { 
-                    time: "13:30", type: "FOOD", title: "午餐：炭焼 うな富士", sub: "名古屋三大美食：鰻魚飯", 
-                    address: "愛知県名古屋市昭和区白金1-1-4", tel: "052-881-0067",
-                    desc: "【米其林必比登推薦】\n不同於一般的鰻魚店，這裡使用的是「青鰻」，肉質肥厚，炭火烤過後外皮酥脆，油脂豐富。必點「肝入りうなぎ丼（鰻肝蓋飯）」或「ひつまぶし（鰻魚三吃）」。",
-                    menu: [ { name: "上鰻魚三吃", jp: "上ひつまぶし", price: "¥5,170" }, { name: "鰻肝蓋飯", jp: "肝入りうなぎ丼", price: "¥6,050" } ],
-                    tabelog: 'https://tabelog.com/aichi/A2301/A230105/23000105/'
-                },
-                { time: "15:30", type: "STAY", title: "Check-in: Comfort Hotel", desc: "Nagoya Shinkansenguchi", address: "愛知県名古屋市中村区則武1-13-7", tel: "052-453-3111", booking: "CONF#80886535", icon: "bed" },
-                { 
-                    time: "16:30", type: "SIGHT", title: "大須觀音 & 商店街", sub: "雨天備案 / 逛街",
-                    address: "愛知県名古屋市中区大須2丁目21-47",
-                    desc: "【名古屋的秋葉原】\n有著400多年歷史的觀音寺，旁邊連接著巨大的拱廊商店街，無論晴雨都很好逛。有許多古著店、電器行與異國美食。"
-                },
-                { 
-                    time: "17:30", type: "FOOD", title: "下午茶：HARBS 本店", sub: "水果千層蛋糕",
+                    time: "13:30", type: "FOOD", title: "午餐：HARBS 榮本店", sub: "三點前有商業午餐", 
                     address: "愛知県名古屋市中区錦3-6-17",
-                    desc: "【甜點控的朝聖地】\n發源於名古屋的 HARBS，榮本店是必去之處。招牌「水果千層蛋糕」夾滿了哈密瓜、奇異果、香蕉等新鮮水果，搭配不甜膩的鮮奶油，是完美的下午茶選擇。",
-                    menu: [ { name: "水果千層", jp: "ミルクレープ", price: "¥980" } ],
-                    tabelog: 'https://tabelog.com/aichi/A2301/A230103/23000028/'
+                    desc: "【甜點控朝聖】\n發源於名古屋的人氣甜點名店，招牌「水果千層蛋糕」夾滿新鮮水果與不甜膩的鮮奶油，商業午餐CP值極高！", 
+                    menu: [ { name: "水果千層", jp: "ミルクレープ", price: "¥980" } ], 
+                    tabelog: 'https://tabelog.com/aichi/A2301/A230103/23000028/' 
                 },
                 { 
-                    time: "18:30", type: "SIGHT", title: "綠洲21 & 電視塔", sub: "宇宙飛船夜景",
+                    time: "15:30", type: "SIGHT", title: "綠洲21 & 電視塔", sub: "宇宙飛船地標",
                     address: "愛知県名古屋市東区東桜1-11-1",
-                    desc: "【水的宇宙船】\n巨大的玻璃屋頂上方有水流動，晚上點燈後非常科幻。可以上去屋頂散步，拍攝與名古屋電視塔的合照。"
+                    desc: "【水的宇宙船】\n名古屋標誌性建築，巨大的玻璃屋頂上方有水流動，非常適合在此散步，拍攝與名古屋電視塔的合照。" 
                 },
                 { 
-                    time: "19:30", type: "FOOD", title: "晚餐：世界的山醬", sub: "夢幻手羽先", address: "名古屋駅周邊", 
-                    desc: "【名古屋的靈魂食物】\n雖然台灣也有分店，但名古屋當地的胡椒味更重、更香脆！這家店創立於1981年，靠著這道「夢幻雞翅」征服了全日本。\n\n【吃法攻略】\n抓住雞翅兩端，用力扭斷關節，然後將肉一口氣吸入，這就是在地人的豪邁吃法！",
-                    menu: [ { name: "夢幻雞翅 (5支)", jp: "幻の手羽先", price: "¥605" }, { name: "味噌炸豬排串", jp: "みそ串カツ", price: "¥495" } ],
-                    tabelog: 'https://tabelog.com/aichi/A2301/A230103/23000084/'
+                    time: "17:00", type: "SIGHT", title: "大須觀音 & 商店街", sub: "逛街與庶民小吃",
+                    address: "愛知県名古屋市中区大須2丁目21-47",
+                    desc: "【名古屋的秋葉原】\n歷史悠久的觀音寺旁連接著龐大好逛的拱廊商店街，有許多古著店與邊走邊吃的銅板美食，是體驗在地文化與挖寶的好去處。" 
+                },
+                { 
+                    time: "18:30", type: "SIGHT", title: "則武之森、AEON MALL", sub: "Nagoya Noritake Garden",
+                    address: "愛知県名古屋市西区則武新町3-1-17",
+                    desc: "【最美蔦屋書店】\n結合紅磚建築歷史感與現代大型商場的絕美休閒地，環境優美，商場內的巨大書牆更是網美必拍打卡點。" 
+                },
+                { time: "20:00", type: "STAY", title: "Check-in: Comfort Hotel", desc: "Nagoya Shinkansenguchi", address: "愛知県名古屋市中村区則武1-13-7", tel: "052-453-3111", booking: "CONF#80886535", icon: "bed" },
+                { 
+                    time: "20:30", type: "FOOD", title: "晚餐：炭焼 うな富士", sub: "名古屋站太閤口店(已訂位)", 
+                    address: "名古屋車站周邊",
+                    desc: "【米其林必比登推薦】\n名古屋必吃排隊名店，使用高品質青鰻，備長炭烤得外酥內軟、香氣四溢。必吃經典的「ひつまぶし（鰻魚三吃）」。", 
+                    menu: [ { name: "上鰻魚三吃", jp: "上ひつまぶし", price: "¥5,170" } ], 
+                    tabelog: 'https://tabelog.com/aichi/A2301/A230105/23000105/' 
                 }
             ]
         },
         {
-            day: "Day 2", date: "4/12", weekday: "SUN", location: "中山道/高山",
+            day: "Day 2", date: "4/12", weekday: "SUN", location: "高山",
             lat: 36.14, lon: 137.25,
             highlights: [
-                { time: "08:00", type: "DRIVE", title: "出發前往中山道", desc: "經由中央自動車道 (約1.5hr)", icon: "navigation" },
                 { 
-                    time: "09:30", type: "SIGHT", title: "馬籠宿", sub: "江戶時代石板坡道",
-                    address: "岐阜県中津川市馬籠", mapcode: "178 355 491*22",
-                    desc: "【走進時光隧道】\n中山道第43號宿場。特色是險峻的石板坡道，兩旁保留著江戶時代的木造建築。推薦品嚐當地的「五平餅」。"
+                    time: "09:30", type: "FOOD", title: "早午餐：Kakako 柳橋市場店", sub: "經典紅豆吐司", 
+                    address: "愛知県名古屋市中村区名駅4-15-2",
+                    desc: "【名古屋早餐文化】\n在地人氣名店，能完美體驗名古屋最具特色的「紅豆泥吐司」經典早餐文化，厚實鬆軟的吐司搭配綿密紅豆泥是一絕。" 
                 },
                 { 
-                    time: "10:30", type: "SIGHT", title: "妻籠宿", sub: "保存最完整的宿場",
-                    address: "長野県木曽郡南木曽町吾妻", mapcode: "178 506 332*20",
-                    desc: "【日本第一個傳統建物保存區】\n相比馬籠宿的熱鬧，妻籠宿更顯質樸寧靜。這裡完整保留了百年前的風貌，完全看不到電線桿。"
+                    time: "10:30", type: "SIGHT", title: "名古屋城、名城公園", sub: "日本三大名城",
+                    address: "愛知県名古屋市中区本丸1-1",
+                    desc: "【金鯱之城】\n日本三大名城之一，屋頂上兩隻金色的「鯱」是名古屋象徵。壯麗的城郭建築與大片綠地相映，春天更是極佳的賞櫻勝地。" 
                 },
+                { time: "14:00", type: "DRIVE", title: "出發前往高山", desc: "經由東海北陸自動車道 (車程約 2.5 小時)", icon: "navigation" },
                 { 
-                    time: "13:30", type: "SIGHT", title: "高遠城址公園", sub: "天下第一櫻",
-                    address: "長野県伊那市高遠町東高遠", mapcode: "171 445 289*60",
-                    desc: "【粉紅色的雲海】\n高遠城的小彼岸櫻花以花形小巧、顏色較紅為特徵，被譽為「天下第一櫻」。4月中旬是滿開期，整個公園被1500棵櫻花染成粉紅色，非常壯觀。"
-                },
-                { 
-                    time: "15:30", type: "SIGHT", title: "奈良井宿", sub: "中山道最長宿場",
-                    address: "長野県塩尻市奈良井", mapcode: "420 541 784*44",
-                    desc: "【奈良井千軒】\n這是木曾路最北端的宿場，保留了江戶時代長達一公里的古老街道。必看地標是巨大的「木曾大橋」。"
-                },
-                { 
-                    time: "19:30", type: "FOOD", title: "晚餐：味藏天國", sub: "JA農協直營 飛驒牛燒肉",
+                    time: "17:00", type: "FOOD", title: "晚餐：味藏天國", sub: "飛驒牛燒肉 (無法預約)", 
                     address: "岐阜県高山市花里4-147", tel: "0577-37-1129",
-                    desc: "【絕對不會踩雷的飛驒牛】\n這家店是JA（日本農協）直營的，這意味著肉源絕對新鮮、品質由農協掛保證，而且價格比一般高級燒肉店親民。\n\n【部位推薦】\n如果預算足夠，直上「飛驒牛盛合（拼盤）」，可以一次吃到里肌、五花、骰子牛等不同部位，感受油脂在口中融化的幸福感。",
-                    menu: [ { name: "味藏拼盤", jp: "味蔵盛り", price: "¥9,800" }, { name: "特上牛五花", jp: "特上カルビ", price: "¥2,480" } ],
-                    tabelog: 'https://tabelog.com/gifu/A2104/A210401/21000287/'
+                    desc: "【JA農協直營】\n農協直營的頂級飛驒牛燒肉專賣店，肉質鮮甜、油花分布均勻，入口即化。因無法預約，建議抵達後先去抽號碼牌。", 
+                    menu: [ { name: "味藏拼盤", jp: "味蔵盛り", price: "¥9,800" } ], 
+                    tabelog: 'https://tabelog.com/gifu/A2104/A210401/21000287/' 
                 },
-                { time: "21:00", type: "STAY", title: "hotel around TAKAYAMA", desc: "Ascend Hotel Collection", address: "岐阜県高山市花岡町1-42-7", tel: "0577-32-5002", booking: "CONF#78677355", icon: "bed" }
+                { time: "19:00", type: "SHOP", title: "購物：大國藥妝", sub: "高山店", desc: "晚餐後順路採買免稅藥妝與日常補給品。" },
+                { time: "20:00", type: "STAY", title: "hotel around TAKAYAMA", desc: "Ascend Hotel Collection", address: "岐阜県高山市花岡町1-42-7", tel: "0577-32-5002", booking: "CONF#78677355", icon: "bed" },
+                { time: "21:00", type: "SHOP", title: "購物：堂吉訶德", sub: "驚安殿堂", desc: "高山地區的夜間逛街好去處，零食與伴手禮一次買齊。" }
             ]
         },
         {
-            day: "Day 3", date: "4/13", weekday: "MON", location: "奧飛驒/松本",
+            day: "Day 3", date: "4/13", weekday: "MON", location: "奧飛驒",
             lat: 36.23, lon: 137.97,
             highlights: [
                 { 
-                    time: "09:00", type: "SIGHT", title: "新穗高雙層纜車", sub: "標高2156m 雲上市界",
-                    address: "岐阜県高山市奥飛騨温泉郷新穂高", tel: "0578-89-2252",
-                    desc: "【米其林二星絕景】\n這是日本唯一的雙層纜車！山頂的展望台可以看到槍之岳、穗高連峰的 360 度全景。路程中會經過平湯溫泉，可視時間泡足湯。"
+                    time: "09:00", type: "SIGHT", title: "飛驒古川 瀨戶川鯉魚", sub: "瀨戶川和白壁土藏街", 
+                    address: "岐阜県飛騨市古川町",
+                    desc: "【你的名字聖地】\n比高山更寧靜的古老小鎮，傳統白壁土藏與瀨戶川中悠游的上千錦鯉相映成趣，充滿悠閒靜謐的下町風情。" 
+                },
+                { time: "10:00", type: "SHOP", title: "飛驒古川櫻花物產館", sub: "在地特產與工藝品", desc: "館內可選購豐富的飛驒在地伴手禮與精美傳統工藝品。" },
+                { 
+                    time: "13:30", type: "SIGHT", title: "白川鄉合掌村 (賞櫻)", sub: "世界文化遺產", 
+                    address: "岐阜県大野郡白川村荻町",
+                    desc: "【春季粉色童話】\n保留如童話般的茅草屋聚落，春季櫻花點綴更顯夢幻。\n\n【美食推薦】\n必嚐白川鄉布丁之家、元祖紫蘇最中點心、飛驒牛蕎麥麵、飛驒牛奶，以及 KATARIBE 合掌村造型雞蛋糕！" 
                 },
                 { 
-                    time: "12:30", type: "FOOD", title: "午餐：松本炸雞 (山賊燒)", sub: "松本名物",
-                    address: "松本市區 (推薦: 一歩)", 
-                    desc: "【豪邁的帶骨炸雞】\n「山賊燒」其實是將整隻雞腿肉用大蒜、洋蔥醬油醃漬後酥炸的料理。外皮酥脆，肉汁豐富，是松本市民的最愛。",
-                    menu: [ { name: "山賊燒定食", jp: "山賊焼き定食", price: "¥1,100" } ],
-                    tabelog: 'https://tabelog.com/nagano/A2002/A200201/20000049/'
+                    time: "19:00", type: "FOOD", title: "晚餐：麵屋Shirakawa", sub: "高山人氣排隊拉麵", 
+                    address: "岐阜県高山市相生町56-2",
+                    desc: "【清爽系中華拉麵】\n高山極具人氣的排隊拉麵名店，以清爽順口的醬油湯頭與微捲的細麵條擄獲無數饕客的心。",
+                    tabelog: 'https://tabelog.com/gifu/A2104/A210401/21008544/'
                 },
-                { 
-                    time: "14:00", type: "SIGHT", title: "國寶 松本城", sub: "烏城 Black Castle",
-                    address: "長野県松本市丸の内4-1", mapcode: "75 621 155*00",
-                    desc: "【現存十二天守之一】\n因為外觀漆黑，又被稱為「烏城」。下午順光拍攝，黑色的城堡在北阿爾卑斯雪山的映襯下，顯得格外莊嚴肅穆。\n\n【建築特色】\n天守閣內部保留了戰國時代的結構，樓梯非常陡峭（最大斜度約61度），攀爬時請務必小心。"
-                },
-                { time: "18:00", type: "STAY", title: "hotel around TAKAYAMA", desc: "續住", booking: "CONF#78677355", icon: "bed" }
+                { time: "20:00", type: "STAY", title: "hotel around TAKAYAMA", desc: "續住", booking: "CONF#78677355", icon: "bed" }
             ]
         },
         {
@@ -264,62 +255,69 @@
             lat: 36.14, lon: 137.25,
             highlights: [
                 { 
-                    time: "All Day", type: "SIGHT", title: "春之高山祭 (山王祭)", sub: "日本三大美祭",
-                    address: "岐阜県高山市 日枝神社周邊", 
-                    desc: "【活動的陽明門】\n高山祭的主角是 12 座裝飾華麗的「屋台（花車）」。這些屋台展現了飛驒工匠精湛的木工、漆藝與金屬工藝。\n\n【必看：機關人偶】\n其中幾座屋台上有「機關人偶（Karakuri）」，由操偶師在內部用線操控，人偶會做出變臉、寫字、跳舞等驚人動作，千萬別錯過表演時間！"
+                    time: "10:00", type: "SIGHT", title: "春之高山祭 (山王祭)", sub: "日本三大美祭", 
+                    address: "岐阜県高山市 日枝神社周邊",
+                    desc: "【活動的陽明門】\n宣告飛驒高山春天來臨的祭典。華麗絢爛的祭典屋台與精緻生動的機關人偶表演，是絕對不可錯過的最大看點。" 
                 },
                 { 
-                    time: "12:00", type: "FOOD", title: "小吃：坂口屋", sub: "飛驒牛握壽司",
-                    address: "岐阜県高山市上三之町90",
-                    desc: "【老街散步美食】\n這家是老街上最有名的小吃店之一。他們的飛驒牛握壽司不是放在盤子上，而是放在一片「仙貝」上，吃完壽司連盤子一起吃掉，環保又美味！\n牛肉表面稍微炙燒過，油脂香氣逼人，入口即化。",
-                    menu: [ { name: "飛驒牛握壽司(2貫)", jp: "飛騨牛にぎり寿司", price: "¥800" } ],
-                    tabelog: 'https://tabelog.com/gifu/A2104/A210401/21000020/'
+                    time: "11:00", type: "SIGHT", title: "高山老街、高山陣屋", sub: "美食：飛驒特牛、えび八天婦羅", 
+                    desc: "漫步於古色古香的江戶時代老街，品嚐特色小吃，並可參觀日本唯一僅存的江戶時代代官所「高山陣屋」。" 
                 },
-                { time: "18:00", type: "STAY", title: "hotel around TAKAYAMA", desc: "續住", booking: "CONF#78677355", icon: "bed" }
+                { 
+                    time: "12:00", type: "FOOD", title: "小吃：坂口屋", sub: "飛驒牛握壽司 (11:00-14:30)", 
+                    address: "岐阜県高山市上三之町90",
+                    desc: "【老街必吃美食】\n高山老街大排長龍的超人氣小吃，以酥脆仙貝作為底座盛裝炙燒飛驒牛，鮮嫩多汁，環保又美味。",
+                    menu: [ { name: "飛驒牛握壽司", jp: "飛騨牛にぎり寿司", price: "¥800" } ]
+                },
+                { 
+                    time: "15:00", type: "SIGHT", title: "飛驒之里", sub: "合掌造民俗村", 
+                    desc: "將多棟珍貴的合掌造建築移建至此的民俗村，環境清幽，能深入了解飛驒地區的舊時農村生活與傳統工藝。" 
+                },
+                { 
+                    time: "17:00", type: "FOOD", title: "晚餐：Center4 Hamburgers", sub: "超人氣飛驒牛漢堡", 
+                    address: "岐阜県高山市上一之町94",
+                    desc: "【藏在古民家的美式漢堡】\n隱身於高山市區巷弄間的超人氣美式漢堡店，招牌飛驒牛漢堡排肉汁飽滿，是TripAdvisor上極受歐美客喜愛的名店。" 
+                },
+                { 
+                    time: "18:30", type: "SIGHT", title: "夜間祭典", sub: "高山祭夜祭", 
+                    desc: "【夢幻夜巡】\n高山祭獨特的夜祭活動，提著數百盞燈籠的屋台在夜色中巡遊，營造出與白天截然不同的奇幻且浪漫氛圍。" 
+                },
+                { time: "20:00", type: "STAY", title: "hotel around TAKAYAMA", desc: "續住", booking: "CONF#78677355", icon: "bed" }
             ]
         },
-        {
-            day: "Day 5", date: "4/15", weekday: "WED", location: "富山",
-            lat: 36.69, lon: 137.21,
+{
+            day: "Day 5", date: "4/15", weekday: "WED", location: "奧飛驒/大町",
+            lat: 36.2, lon: 137.8,
             highlights: [
-                { time: "AM", type: "SIGHT", title: "高山祭 (Day 2)", desc: "把握最後機會欣賞屋台巡遊", icon: "flag" },
                 { 
-                    time: "12:00", type: "FOOD", title: "午餐：Center4 Hamburgers", sub: "歐美客最愛 飛驒牛漢堡",
-                    address: "岐阜県高山市上一之町94", tel: "0577-36-4527",
-                    desc: "【藏在古民家裡的漢堡店】\n雖然外觀是傳統的日式古民家，推開門卻是濃濃的美式復古風。這裡的飛驒牛漢堡排多汁厚實，咬下去肉汁會噴發，是TripAdvisor上高山排名第一的名店。\n\n⚠️ 注意：店家座位極少，建議開店前排隊。",
-                    menu: [ { name: "飛驒牛漢堡", jp: "飛騨牛バーガー", price: "¥2,850" }, { name: "酪梨起司漢堡", jp: "アボカドチーズ", price: "¥1,450" } ],
-                    tabelog: 'https://tabelog.com/gifu/A2104/A210401/21008670/'
+                    time: "09:00", type: "SIGHT", title: "飛驒大鐘乳石洞、奧飛驒熊牧場", sub: "自然生態體驗", 
+                    desc: "探索日本海拔最高的神祕鐘乳石洞，並在熊牧場近距離觀察可愛的亞洲黑熊。" 
                 },
                 { 
-                    time: "13:30", type: "SIGHT", title: "飛驒古川 瀨戶川鯉魚", sub: "你的名字 聖地巡禮",
-                    address: "岐阜県飛騨市古川町", mapcode: "191 548 574*63",
-                    desc: "【比高山更靜謐的白壁土藏】\n如果您喜歡電影《你的名字》，這裡絕對是必訪聖地。瀧尋找三葉的車站、圖書館都在這裡。\n\n【瀨戶川與鯉魚】\n這條流經白壁土藏街的小河川，飼養著上千條色彩斑斕的錦鯉。冬天時為了怕鯉魚凍死，居民會將牠們搬家到較溫暖的池塘，春天再搬回來，是當地特有的「鯉魚搬家」習俗。"
-                },
-                { time: "15:00", type: "DRIVE", title: "前往富山 (經朝日町)", desc: "車程約 2 小時", icon: "car" },
-                { 
-                    time: "16:30", type: "SIGHT", title: "春之四重奏 (朝日町)", sub: "季節限定絕景",
-                    address: "富山県下新川郡朝日町", mapcode: "323 158 531*41",
-                    desc: "【奇蹟的同框】\n這裡可以同時拍到四種顏色：\n1. 白色的北阿爾卑斯殘雪（背景）\n2. 粉紅色的舟川櫻花林\n3. 黃色的油菜花田\n4. 紅色的鬱金香花田\n\n這四種色彩在同一個畫面中綻放，是大自然最美的協奏曲。最佳觀賞期通常在4月上旬至中旬。"
+                    time: "12:00", type: "SIGHT", title: "新穗高雙層纜車", sub: "山頂 CAFÉ GOKAN", 
+                    address: "岐阜縣高山市奧飛驒溫泉鄉新穗高",
+                    desc: "【雲上市界】搭乘日本唯一的雙層纜車直達山頂，360度零死角飽覽北阿爾卑斯群山的壯麗雪景。" 
                 },
                 { 
-                    time: "19:00", type: "FOOD", title: "晚餐：白えび亭 (白蝦亭)", sub: "富山灣的寶石",
-                    address: "富山県富山市明輪町1-220 (富山站內)", tel: "076-433-0355",
-                    desc: "【富山灣的寶石】\n白蝦亭位於富山車站旁，最出名的就是「白蝦天丼」。\n\n每一碗天丼都鋪滿了數十隻手工剝殼的白蝦，炸得酥脆鮮甜，完全不需要沾醬就非常好吃！",
-                    menu: [ { name: "白蝦天丼", jp: "白えび天丼", price: "¥1,680" }, { name: "白蝦刺身丼", jp: "白えび刺身丼", price: "¥2,980" } ],
-                    tabelog: 'https://tabelog.com/toyama/A1601/A160101/16000041/'
+                    time: "15:30", type: "SIGHT", title: "國寶 松本城、繩手通", sub: "日本最古老天守", 
+                    address: "長野縣松本市丸之內4-1",
+                    desc: "參觀黑白對比極具氣勢的「烏城」松本城；隨後可至充滿懷舊氛圍的「青蛙街」繩手通商店街。" 
                 },
-                { time: "20:00", type: "STAY", title: "Comfort Hotel Toyama", desc: "Toyama Station", address: "富山県富山市宝町1-3-2", tel: "076-433-3111", booking: "CONF#80924504", icon: "bed" }
+                { 
+                    time: "18:00", type: "FOOD", title: "晚餐：松本炸雞 (山賊燒)", sub: "松本名物", 
+                    desc: "【豪邁美食】將大塊帶骨雞腿肉用獨門蒜味醬油醃製後豪邁油炸，外皮酥脆、肉汁滿溢。" 
+                },
+                { time: "20:00", type: "STAY", title: "綠翠亭 景水", desc: "大町溫泉鄉", address: "長野縣大町市平2884-13", tel: "0261-22-5501", booking: "Agoda: 1712915751", icon: "bed" }
             ]
         },
         {
             day: "Day 6", date: "4/16", weekday: "THU", location: "立山黑部",
             lat: 36.57, lon: 137.60,
             highlights: [
-{ 
-    time: "07:00", type: "SIGHT", title: "立山黑部 雪之大谷", sub: "開山初期限定絕景",
-    address: "立山駅 (車停此處)", mapcode: "669 222 537*11",
-    desc: `【六種交通工具的接力賽】
-為了保護環境，私家車只能停在山下的「立山站」。接下來您將換乘纜車、高原巴士、無軌電車等 6 種交通工具，橫越阿爾卑斯山脈。
+                { 
+                    time: "12:30", type: "SIGHT", title: "扇澤上山，立山黑部 雪之大谷", sub: "阿爾卑斯路線絕景", 
+                    desc: `【六種交通工具的接力賽】
+您將從扇澤側出發，換乘電力巴士、纜車等 6 種交通工具橫越日本阿爾卑斯山。
 
 <a href="./交通工具.png" target="_blank" class="block mt-3 mb-3">
     <img src="./交通工具.png" class="w-full rounded-xl shadow-sm border border-stone-200" alt="交通工具">
@@ -327,56 +325,40 @@
 </a>
 
 【雪之大谷】
-在室堂站（海拔2450m），高原巴士會行駛在兩側高達15-20公尺的雪壁之間。
+在室堂站（海拔2450m），漫步於高達近20公尺的壯觀「雪之大谷」雪壁之中，感受大自然的震撼。
 
 <a href="./雪牆路線.jpg" target="_blank" class="block mt-3 mb-6">
     <img src="./雪牆路線.jpg" class="w-full rounded-xl shadow-sm border border-stone-200" alt="雪牆路線">
     <span class="text-[10px] text-stone-400 block text-center mt-1">點擊查看大圖</span>
-</a>
-
-【停車資訊】
-<a href='https://maps.app.goo.gl/NKsqRDBj1PcgU3gAA' target='_blank' class='block text-blue-600 underline mb-1'>📍 P1 千寿ヶ原駐車場 (最近)</a>
-<a href='https://maps.app.goo.gl/knY2ibVJJgp34rU29' target='_blank' class='block text-blue-600 underline mb-1'>📍 P2 千寿ヶ原緑地公園駐車場</a>
-<a href='https://maps.app.goo.gl/3bKxWKi2PMSdXUwu6' target='_blank' class='block text-blue-600 underline mb-3'>📍 P3 千寿ヶ原緑地公園駐車場2</a>
-<a href='https://www.sensorsandworks-s2.net/parking_information/' target='_blank' class='block w-full text-center py-2 bg-stone-100 rounded text-stone-600 font-bold'>🅿️ 查看即時車位狀況</a>`
-},
-                { 
-                    time: "18:00", type: "FOOD", title: "晚餐：廻転とやま鮨", sub: "富山灣直送",
-                    address: "富山県富山市桜町1-4-10", tel: "076-431-5448",
-                    desc: "【迴轉壽司的頂點】\n富山的迴轉壽司水準極高！這家店強調「天然的魚塘—富山灣」直送。這裡的魚獲因為距離港口近，鮮度沒話說。\n必點富山三寶：白蝦、螢光烏賊、鰤魚（Buri）。",
-                    menu: [ { name: "富山灣三種盛", jp: "富山湾三種盛り", price: "¥680" }, { name: "螢光烏賊", jp: "ホタルイカ", price: "¥380" } ],
-                    tabelog: 'https://tabelog.com/toyama/A1601/A160101/16007229/'
+</a>` 
                 },
-                { time: "20:00", type: "STAY", title: "Comfort Hotel Toyama", desc: "續住", booking: "CONF#80924504", icon: "bed" }
+                { time: "20:00", type: "STAY", title: "綠翠亭 景水", desc: "續住", booking: "Agoda: 1712915751", icon: "bed" }
             ]
         },
         {
-            day: "Day 7", date: "4/17", weekday: "FRI", location: "白川鄉/三重",
-            lat: 36.25, lon: 136.90,
+            day: "Day 7", date: "4/17", weekday: "FRI", location: "長野/三重",
+            lat: 35.8, lon: 137.5,
             highlights: [
+                { time: "09:30", type: "DRIVE", title: "往伊那方向", desc: "準備開車南下", icon: "navigation" },
                 { 
-                    time: "08:30", type: "SIGHT", title: "雨晴海岸", sub: "海越立山絕景",
-                    address: "富山県高岡市太田", mapcode: "128 393 254*55",
-                    desc: "【世界級奇景】\n這是世界上少數可以「隔著大海眺望3000公尺級雪山」的地方。前景是女岩與湛藍的富山灣，背景是雄偉的立山連峰，運氣好遇到晴天時，美得像一幅畫。"
+                    time: "13:00", type: "SIGHT", title: "高遠城公園", sub: "天下第一櫻", 
+                    address: "長野県伊那市高遠町東高遠",
+                    desc: "【粉紅色的雲海】\n園內種植超過1500株特有種高遠小彼岸櫻，盛開時宛如粉色雲海般浪漫迷人，是不可錯過的賞櫻名所。" 
                 },
                 { 
-                    time: "11:00", type: "SIGHT", title: "白川鄉合掌村 (賞櫻)", sub: "世界遺產",
-                    address: "岐阜県大野郡白川村荻町", tel: "05769-6-3111",
-                    desc: "【春季限定粉色童話】\n雖然您之前可能來過，但4月中下旬的合掌村剛好是櫻花季。不同於冬天的銀白世界，粉嫩的櫻花點綴在古老的合掌造建築旁，別有一番風味。\n\n【停車導航】\n請設定導航至「村營細流停車場（せせらぎ公園駐車場）」，這是遊覽合掌村最主要的停車場，過橋即達村落。",
-                    tips: "導航：村營細流停車場"
-                },
-                { time: "14:00", type: "DRIVE", title: "前往名花之里", desc: "經東海北陸自動車道 (約2.5hr)", icon: "car" },
-                { 
-                    time: "17:30", type: "SIGHT", title: "名花之里", sub: "日本最大燈海",
-                    address: "三重県桑名市長島町駒江漆畑270", tel: "0594-41-0787",
-                    desc: "【地上的銀河】\n這裡連續多年被評為日本必看的夜間燈飾第一名。最著名的是全長200公尺的「光之隧道」，數百萬顆暖黃色的LED燈泡將您包圍，極度浪漫。\n\n園區內的「秋海棠花園」也非常壯觀，建議購買套票進入參觀。"
+                    time: "15:30", type: "SIGHT", title: "馬籠宿", sub: "中山道驛站町", 
+                    address: "岐阜県中津川市馬籠",
+                    desc: "【江戶時代石板坡道】\n完整保留江戶時代風貌，沿著古意盎然的險峻石板坡道漫步，彷彿穿越時空。推薦品嚐當地的「五平餅」。" 
                 },
                 { 
-                    time: "20:00", type: "FOOD", title: "晚餐：山本屋本店", sub: "味噌烏龍麵",
-                    address: "愛知県名古屋市中村区名駅3-12-19", tel: "052-565-0278",
-                    desc: "【超硬派！名古屋名物】\n第一次吃的人可能會嚇一跳：「麵芯怎麼沒熟？」別擔心，這就是山本屋本店的特色！使用粗硬的生麵直接放入味噌高湯燉煮，口感極具嚼勁。\n\n建議搭配免費續加的漬物（白菜、蘿蔔），非常解膩。",
-                    menu: [ { name: "味噌烏龍麵", jp: "味噌煮込みうどん", price: "¥1,200" } ],
-                    tabelog: 'https://tabelog.com/aichi/A2301/A230103/23000122/'
+                    time: "18:30", type: "SIGHT", title: "名花之里", sub: "日本最大燈海", 
+                    address: "三重県桑名市長島町駒江漆畑270",
+                    desc: "【地上的銀河】\n廣大的園區與璀璨無比的200公尺「光之隧道」交織出令人驚豔的夢幻視覺饗宴，極度浪漫。" 
+                },
+                { 
+                    time: "20:00", type: "FOOD", title: "晚餐：山本屋本店", sub: "味噌烏龍麵", 
+                    address: "愛知県名古屋市中村区名駅",
+                    desc: "【硬派名古屋名物】\n以濃郁厚實的八丁味噌熬煮，搭配嚼勁十足的偏硬手工生麵，越嚼越香，是令人回味無窮的經典美食。" 
                 },
                 { time: "21:30", type: "STAY", title: "Comfort Hotel Nagoya Fushimi", desc: "伏見站", address: "愛知県名古屋市中区錦2-19-14", tel: "052-201-3111", booking: "CONF#80924952", icon: "bed" }
             ]
@@ -385,23 +367,16 @@
             day: "Day 8", date: "4/18", weekday: "SAT", location: "愛知",
             lat: 35.17, lon: 137.09,
             highlights: [
-                // 在 Day 8 的 highlights 陣列中
-{ 
-    time: "10:00", type: "SIGHT", title: "吉卜力公園", sub: "宮崎駿的夢幻世界",
-    address: "愛知県長久手市茨ケ廻間乙1533-1", 
-    // 修改 booking 並新增 link
-    booking: "憑證號: 80097-2026-0210-8100-5240-0003",
-    link: "./吉卜力憑證.pdf", 
-    // 下方 desc 保持不變
-    desc: "【真的走進電影裡】\n吉卜力公園位於愛知縣，是將原本的「愛・地球博紀念公園」重新規劃... (略)",
-    tips: "請務必提前下載 PDF 存檔"
-},
                 { 
-                    time: "17:00", type: "FOOD", title: "晚餐：丸哈食堂 (まるは食堂)", sub: "特大炸蝦",
-                    address: "常滑本店",
-                    desc: "【愛知縣民的愛】\n這家食堂以「巨無霸炸蝦」聞名，蝦肉緊實彈牙，外皮酥脆不油膩。這是在地人從小吃到大的美味，雖然價格稍高，但份量絕對對得起價格。",
-                    menu: [ { name: "特大炸蝦定食", jp: "エビフライ定食", price: "¥2,200" } ],
-                    tabelog: 'https://tabelog.com/aichi/A2304/A230402/23001853/'
+                    time: "10:00", type: "SIGHT", title: "吉卜力公園", sub: "宮崎駿的夢幻世界", 
+                    address: "愛知県長久手市茨ケ廻間乙1533-1", 
+                    booking: "憑證號: 80097-2026-0210-8100-5240-0003", link: "./吉卜力憑證.pdf", 
+                    desc: "【真的走進電影裡】\n園區完美重現《龍貓》、《神隱少女》等吉卜力經典作品的奇幻場景與獨特世界觀，主打「散步、發現、感受」。", 
+                    tips: "請務必提前下載 PDF 存檔" 
+                },
+                { 
+                    time: "17:00", type: "FOOD", title: "晚餐：丸哈食堂 (まるは食堂)", sub: "特大炸蝦", 
+                    desc: "【愛知縣民的愛】\n以新鮮海產與尺寸驚人的「巨無霸炸蝦」聞名，外層麵衣酥脆不膩口，蝦肉鮮甜彈牙，絕對滿足。" 
                 },
                 { time: "20:00", type: "STAY", title: "Comfort Hotel Central Int Airport", desc: "機場島內", address: "愛知県常滑市セントレア4-2-3", tel: "0569-38-7211", booking: "CONF#80889756", icon: "bed" }
             ]
@@ -410,23 +385,11 @@
             day: "Day 9", date: "4/19", weekday: "SUN", location: "返台",
             lat: 34.86, lon: 136.81,
             highlights: [
+                { time: "09:30", type: "CAR", title: "還車：日產レンタカー", desc: "中部國際機場店", tips: "請加滿油並保留收據", icon: "corner-up-left" },
                 { 
-                    time: "09:00", type: "SHOP", title: "最後採買：機場免稅店", sub: "蝦餅 / 赤福",
-                    desc: "【必買伴手禮】\n1. 蝦餅之里 (えびせんべいの里)：便宜又大包，綜合口味最受歡迎。\n2. 赤福 (Akafuku)：伊勢名物，紅豆泥包麻糬，保存期限短，適合回國馬上吃。"
+                    time: "10:00", type: "SIGHT", title: "FLIGHT OF DREAMS", sub: "航空主題設施", 
+                    desc: "位於機場內，除了能近距離感受波音787初號機的巨大魄力，還有豐富的互動體驗與特色商店街。" 
                 },
-                { 
-                    time: "09:30", type: "FOOD", title: "早餐/早午餐：Kakako", sub: "名古屋早餐文化",
-                    address: "愛知県名古屋市中村区名駅4-15-2 (柳橋市場店)", 
-                    desc: "【紅豆吐司的極致】\n這家咖啡店位於柳橋中央市場附近，主打自家烘焙咖啡與名古屋特有的「紅豆奶油吐司」。吐司厚實鬆軟，搭配綿密的紅豆泥與現打鮮奶油，是離開名古屋前最棒的回憶。",
-                    menu: [{ name: "紅豆奶油吐司", jp: "小倉トースト", price: "¥850" }],
-                    tabelog: 'https://tabelog.com/aichi/A2301/A230103/23000084/' 
-                },
-                { 
-                    time: "10:30", type: "SIGHT", title: "名古屋城 (外圍拍照)", sub: "金鯱之城",
-                    address: "愛知県名古屋市中区本丸1-1",
-                    desc: "【日本三大名城】\n屋頂上兩隻金色的「鯱」是名古屋的象徵。因時間有限，建議在外圍拍攝壯觀的天守閣即可，或是快速參觀修復完成的「本丸御殿」。"
-                },
-                { time: "11:30", type: "CAR", title: "還車：日產レンタカー", desc: "中部國際機場店", tips: "請加滿油並保留收據", icon: "corner-up-left" },
                 { time: "12:20", type: "FLIGHT", title: "CI 0155 名古屋 ➔ 台北", desc: "14:30 抵達桃園 (TPE)", icon: "plane", booking: "訂位代號: FK3SJX" }
             ]
         }
